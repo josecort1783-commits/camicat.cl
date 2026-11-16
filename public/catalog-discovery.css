@@ -1,0 +1,34 @@
+/* The storefront follows the workshop's paper and ink palette. */
+#coleccion .shop-title h2 { font-size: clamp(1.9rem, 3.8vw, 3rem); text-wrap: balance; }
+#coleccion .shop-title p { max-width: 54ch; }
+#coleccion .catalog-delivery {
+  display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0 0 20px; padding: 10px 14px;
+  background: var(--collection-sage); border-radius: 6px; color: var(--collection-ink);
+  list-style: none; font-size: .85rem; line-height: 1.4;
+}
+#coleccion .catalog-delivery li { display: inline-flex; align-items: center; gap: 7px; }
+#coleccion .catalog-delivery svg { flex: none; width: 17px; height: 17px; }
+#coleccion .category-count {
+  display: inline-grid; place-items: center; min-width: 21px; height: 21px; padding-inline: 4px;
+  border-radius: 20px; color: var(--collection-ink); background: var(--collection-sage);
+  font-size: .72rem; line-height: 1; font-variant-numeric: tabular-nums;
+}
+#coleccion .chips button.active .category-count { color: #24392b; background: #e7eddf; }
+#coleccion .catalog-sort { display: inline-flex; align-items: center; gap: 8px; font-size: .85rem; min-width: 0; }
+#coleccion .catalog-sort span { color: var(--collection-muted); }
+#coleccion .product-meta { border-bottom: 0; }
+#coleccion .product-meta h3 {
+  margin: 0; color: var(--collection-ink); font: 400 clamp(1.1rem, 2vw, 1.35rem)/1.16 Georgia, serif;
+  overflow-wrap: anywhere;
+}
+#coleccion .product-meta h3 button { font: inherit; min-height: 32px; }
+@media (max-width: 650px) {
+  #coleccion .shop-title h2 { font-size: clamp(1.65rem, 7.7vw, 2rem); text-wrap: initial; }
+  #coleccion .catalog-delivery { gap: 6px 12px; margin-bottom: 14px; padding: 9px 10px; font-size: .8rem; }
+  #coleccion .search input::placeholder { font-size: .875rem; }
+}
+@media (max-width: 400px) {
+  #coleccion .catalog-sort span { display: none; }
+}
+#coleccion .catalog-sort, #coleccion .catalog-sort #sort { margin: 0; }
+#coleccion .search input::placeholder { font-size: .875rem; color: var(--collection-muted); opacity: 1; }

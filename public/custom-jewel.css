@@ -1,0 +1,153 @@
+/* The quotation workshop: a paper sketch alongside a compact form. */
+.catalog-extra-links { display:flex; flex-wrap:wrap; gap:4px 14px; align-items:center }
+.catalog-extra-links .text-link { min-height:44px }
+.custom-jewel {
+ width:min(1110px,calc(100% - 48px)); margin:24px auto 30px; padding:clamp(22px,4.4vw,48px);
+ display:grid; grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr); gap:clamp(24px,5vw,70px);
+ align-items:start; background:#e8ecdf; color:#294333; border-radius:5px 28px 5px 28px;
+ scroll-margin-top:14px;
+}
+.custom-jewel[hidden],.custom-review[hidden] { display:none }
+.custom-intro { min-width:0 }
+.custom-kicker { color:#435e48; font-size:13px; font-weight:650; margin:0 0 8px }
+.custom-intro h2 { font:400 clamp(34px,4vw,53px)/1.06 Georgia,serif; letter-spacing:-.04em; margin:0 0 12px }
+.custom-intro>p:not(.custom-kicker) { font-size:15px; line-height:1.65; max-width:38ch; margin:0 }
+.custom-figure { margin:23px 0 0; padding:12px; background:#dbe5d3; border-radius:4px 18px 4px 18px }
+.custom-sketch { display:block; width:100%; height:clamp(122px,16vw,200px); fill:none; stroke:#687c65; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round }
+.custom-figure[data-tone=gold] .custom-sketch { stroke:#806530 }
+.custom-figure[data-tone=silver] .custom-sketch { stroke:#56676b }
+.custom-sketch>g { display:none }
+.custom-figure[data-piece=guide] .sketch-guide,
+.custom-figure[data-piece=earring] .sketch-earring,
+.custom-figure[data-piece=necklace] .sketch-necklace,
+.custom-figure[data-piece=bracelet] .sketch-bracelet,
+.custom-figure[data-piece=ring] .sketch-ring { display:block }
+.custom-sketch .sketch-ghost { opacity:.42; stroke-width:1.5 }
+.custom-sketch .sketch-gem { display:none; stroke-width:1.6 }
+.custom-figure[data-stone=violet] .sketch-gem { display:block; fill:#8b6a9c }
+.custom-figure[data-stone=pink] .sketch-gem { display:block; fill:#d996a1 }
+.custom-figure[data-stone=green] .sketch-gem { display:block; fill:#6e9371 }
+.custom-figure figcaption { color:#405743; font-size:11px; line-height:1.4; text-align:center }
+.custom-main { min-width:0; padding:clamp(14px,2.4vw,24px); background:#f4f1e8; border-radius:4px 17px 4px 17px }
+#customJewelForm fieldset { padding:0; margin:0; border:0; min-width:0 }
+#customFields { display:grid; gap:12px }
+.custom-legend { color:#294333; padding:0; margin-bottom:14px; font:400 21px/1.15 Georgia,serif }
+.custom-piece-field legend { padding:0; margin-bottom:7px; font-size:14px; font-weight:650 }
+.custom-piece-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px }
+.custom-piece-grid label { margin:0; display:flex; align-items:center; gap:6px; min-height:44px; padding:6px 8px; border:1px solid #b8c7af; background:#edf0e4; border-radius:5px; cursor:pointer; font-size:13px; line-height:1.25 }
+.custom-piece-grid label:last-child { grid-column:1/-1; width:max-content; max-width:100% }
+.custom-piece-grid label:has(input:checked) { background:#d8e5d1; border-color:#58765b; font-weight:650 }
+#customJewelForm input[type=radio],#customJewelForm input[type=checkbox] { inline-size:16px; block-size:16px; margin:0; accent-color:#36533e; flex:none }
+.custom-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px }
+#customJewelForm label[for] { display:block; min-width:0; color:#294333; font-size:14px; font-weight:650; line-height:1.45 }
+#customJewelForm label[for] span { font-weight:400 }
+#customJewelForm select,#customJewelForm textarea { display:block; width:100%; margin:5px 0 0; min-height:44px; border:1px solid #b8c7af; background:#faf8f1; color:#294333; padding:9px; border-radius:5px; font:inherit; font-size:16px; font-weight:400 }
+#customJewelForm textarea { resize:vertical }
+.custom-material-note { font-size:12px; color:#405743; line-height:1.4; margin:-4px 0 0 }
+.custom-reference { display:flex; align-items:center; min-height:44px; gap:8px; font-size:13px; line-height:1.4 }
+.custom-review-btn,.custom-review .button { width:max-content; max-width:100%; min-height:46px }
+.custom-jewel :is(a,button,input,select,textarea):focus-visible { outline:2px solid #36533e; outline-offset:3px }
+.custom-piece-grid label:has(input:focus-visible) { outline:2px solid #36533e; outline-offset:1px }
+#customTitle:focus-visible,#customQuoteTitle:focus-visible { outline:2px solid #36533e; outline-offset:4px }
+.custom-review { margin-top:18px; padding:14px; background:#e0e8d8; border-radius:4px 12px 4px 12px }
+.custom-review h3 { scroll-margin-block:18px; font:400 21px/1.2 Georgia,serif; margin:0 }
+.custom-quote { white-space:pre-wrap; overflow-wrap:anywhere; font-size:14px; line-height:1.55; margin:10px 0 13px }
+.custom-review small { display:block; margin-top:9px; color:#405743; font-size:12px; line-height:1.45 }
+@media(max-width:760px) {
+ .custom-jewel { width:calc(100% - 28px); grid-template-columns:minmax(0,1fr); padding:17px; gap:16px }
+ .custom-figure { margin-top:12px; padding:8px }
+ .custom-sketch { height:104px }
+}
+@media(max-width:440px) {
+ .custom-piece-grid { grid-template-columns:repeat(2,minmax(0,1fr)) }
+ .custom-options { grid-template-columns:minmax(0,1fr) }
+ .custom-jewel { padding:14px }
+}
+@media(max-width:360px) {
+ .custom-main { padding:12px }
+}
+
+/* The sketch tells the visitor what changed. The quote gets its own step. */
+#customJewelForm[hidden],#customMeasureField[hidden] { display:none }
+.custom-figure { border:1px solid #bcccb5; background:#dfe8d8; padding:14px }
+.custom-sketch { height:clamp(124px,16vw,200px) }
+.custom-figure figcaption { display:grid; gap:3px; padding:2px 6px 0 }
+.custom-figure figcaption strong { font:400 22px/1.2 Georgia,serif; color:#294333 }
+.custom-figure figcaption span { font-size:13px; font-weight:650 }
+.custom-figure figcaption small { font-size:11px; line-height:1.4 }
+.custom-step-label { width:max-content; max-width:100%; margin:0 0 12px; border-radius:4px; background:#e2e9da; color:#34533c; padding:6px 9px; font-size:12px; font-weight:650 }
+#customJewelForm #customMeasure { display:block; width:100%; margin:5px 0 0; min-height:44px; padding:9px; border:1px solid #b8c7af; border-radius:5px; background:#faf8f1; color:#294333; font:inherit; font-size:16px }
+#customMeasureField small { display:block; margin-top:4px; color:#405743; font-size:12px }
+.custom-review { margin-top:0; padding:clamp(12px,2vw,19px) }
+.custom-review-help { margin:6px 0 0; color:#405743; font-size:13px; line-height:1.45 }
+.custom-quote { background:#f4f1e8; padding:10px 12px; border-radius:4px }
+.custom-review-actions { display:flex; align-items:center; gap:8px; flex-wrap:wrap }
+.custom-review-actions .button { min-height:46px; width:auto; padding-inline:14px }
+@media(max-width:760px) {
+ .custom-figure { padding:8px }
+ .custom-sketch { height:102px }
+}
+
+/* Display board inspired by the workbench: a linen backdrop and shaped wire. */
+.custom-jewel { background:#e1e7d8; gap:clamp(22px,4.5vw,55px); scroll-margin-top:84px }
+.custom-intro h2 { color:#253b2c; margin-bottom:13px }
+.custom-intro .custom-kicker { letter-spacing:.12em; text-transform:uppercase; font-size:11px }
+.custom-intro>p:not(.custom-kicker){ color:#405245 }
+.custom-figure { padding:0; overflow:hidden; border:1px solid #b7c1aa; background:#f4f0e6; border-radius:8px 24px 8px 24px }
+.custom-stage {
+ position:relative; isolation:isolate; scroll-margin-top:86px;
+ background:radial-gradient(ellipse at 31% 22%,#f6eedc 0%,#e8dfc8 42%,#c5bea4 100%);
+}
+.custom-stage::before { content:""; position:absolute; z-index:-1; inset:0; opacity:.19; background:repeating-linear-gradient(90deg,#68614817 0 1px,transparent 1px 4px),repeating-linear-gradient(0deg,#fff8 0 1px,transparent 1px 4px) }
+.custom-stage-label { position:absolute; left:14px; top:13px; color:#4c503b; font-size:10px; letter-spacing:.13em; font-weight:750; text-transform:uppercase }
+.custom-sketch {
+ --metal-light:#fff1bd; --metal-base:#bf9853; --metal-dark:#66451c;
+ --gem-light:#eddfd9; --gem-base:#a99381; --gem-dark:#4d3c32;
+ display:block; height:auto; width:100%; max-height:340px; aspect-ratio:420/300; fill:none; stroke:none;
+}
+.custom-figure[data-tone=silver] .custom-sketch { --metal-light:#faffff; --metal-base:#a4aeb0; --metal-dark:#404d51; stroke:none }
+.custom-figure[data-tone=gold] .custom-sketch { stroke:none }
+.custom-figure[data-stone=violet] .custom-sketch { --gem-light:#edcce9; --gem-base:#89519d; --gem-dark:#341e54 }
+.custom-figure[data-stone=pink] .custom-sketch { --gem-light:#ffe8e4; --gem-base:#cd8597; --gem-dark:#864957 }
+.custom-figure[data-stone=green] .custom-sketch { --gem-light:#d9efbc; --gem-base:#68956a; --gem-dark:#284d3a }
+.custom-sketch .gem-edge { stroke:var(--gem-dark); stroke-width:1 }
+.custom-sketch .cj-wire,.custom-sketch .cj-heavy,.custom-sketch .cj-chain,.custom-sketch .cj-band,.custom-sketch .cj-links { stroke:url(#cj-metal); stroke-width:4; fill:none; stroke-linecap:round; stroke-linejoin:round }
+.custom-sketch .cj-heavy { stroke-width:7 }
+.custom-sketch .cj-band { stroke-width:15 }
+.custom-sketch .cj-chain { stroke-width:4; stroke-dasharray:.8 2.12 }
+.custom-sketch .cj-links { stroke-width:2; stroke-dasharray:.9 2.02; stroke-dashoffset:1.35 }
+.custom-sketch .cj-piece { display:none; filter:drop-shadow(1px 3px 2px #68553963) }
+.custom-figure[data-piece=guide] .cj-earring,.custom-figure[data-piece=earring] .cj-earring,.custom-figure[data-piece=necklace] .cj-necklace,.custom-figure[data-piece=bracelet] .cj-bracelet,.custom-figure[data-piece=ring] .cj-ring { display:block }
+.custom-figure:is([data-stone=guide],[data-stone=none]) .cj-gem { display:none }
+.custom-figure figcaption { padding:14px 17px 16px; text-align:left; border-top:1px solid #b7c1aa }
+.custom-figure figcaption strong { font-size:24px }
+.custom-figure figcaption small { color:#526052 }
+.custom-main { border:1px solid #c4cbb9; border-radius:8px 22px 8px 22px; background:#f9f6ed }
+.custom-piece-grid label { background:#f0f0e6; min-height:46px }
+.custom-piece-grid label:has(input:checked) { box-shadow:inset 0 0 0 1px #58765b }
+.custom-step-label { color:#38543c; background:#e4eadc }
+.custom-peek { display:none; justify-self:start; border:0; background:none; color:#294333; min-height:44px; padding:0 4px; text-decoration:underline; font:inherit; font-size:14px; cursor:pointer }
+.custom-peek span { margin-left:4px }
+.custom-review { background:#edf0e4 }
+.custom-message { margin:12px 0; color:#294333; font-size:14px }
+.custom-message summary { width:fit-content; padding:6px 0; cursor:pointer; text-decoration:underline }
+.custom-quote-summary { margin:12px 0 16px; display:grid; gap:5px; color:#294333 }
+.custom-quote-summary div { display:grid; grid-template-columns:minmax(80px,.7fr) minmax(0,1.3fr); gap:8px; padding:7px 0; border-bottom:1px solid #c4cbb9; font-size:14px }
+.custom-quote-summary dt,.custom-quote-summary dd { margin:0; overflow-wrap:anywhere }
+.custom-quote-summary dt { font-weight:700 }
+#customQuoteTitle { scroll-margin-top:90px }
+@media (max-width:760px){
+ .custom-sketch { max-height:196px }
+ .custom-figure figcaption { padding:9px 12px 11px }
+ .custom-figure figcaption strong { font-size:20px }
+ .custom-peek { display:inline-block }
+}
+.custom-peek[disabled], .custom-return[hidden] { display:none }
+.custom-return { margin:0 12px 5px }
+.custom-stage:focus-visible { outline:2px solid #36533e; outline-offset:-3px }
+.custom-sketch .metal-light { stop-color:var(--metal-light) }
+.custom-sketch .metal-base { stop-color:var(--metal-base) }
+.custom-sketch .metal-dark { stop-color:var(--metal-dark) }
+.custom-sketch .gem-light { stop-color:var(--gem-light) }
+.custom-sketch .gem-base { stop-color:var(--gem-base) }
+.custom-sketch .gem-dark { stop-color:var(--gem-dark) }

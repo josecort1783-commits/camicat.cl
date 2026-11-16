@@ -1,0 +1,106 @@
+/* A fine wire motif, cream paper and clear states for buying controls. */
+:root {
+ --atelier-ground:#adbea2;
+ --atelier-paper:#f4f1e8;
+ --atelier-soft:#e2e8d8;
+ --atelier-ink:#293f30;
+ --atelier-action:#36533e;
+ --atelier-ease:cubic-bezier(.2,.7,.3,1);
+}
+:root[data-jewel-scene=light] { --atelier-ground:#e6ecdf; --atelier-soft:#edf1e6 }
+html,body,.ambient-canvas,:root[data-jewel-scene=light] .ambient-canvas { background:var(--atelier-ground) }
+.ambient-rose,.ambient-lavender,.ambient-sparkles,.jewel-margin-lines,
+.hero-jewel-world>.salvia-petal-field,.hero-jewel-world>.jewel-glow { display:none }
+.hero-jewel-world { background:none }
+.hero-jewel-world::before {
+ content:""; position:absolute; inset:0; pointer-events:none;
+ background:url("assets/sage-atelier-thread.svg") no-repeat left bottom / 100% auto;
+}
+.hero-jewel-world::after {
+ content:""; position:absolute; inset:auto auto 5% 30%; display:block;
+ width:5px; height:5px; background:#f8f3e1; border-radius:50%; opacity:.65;
+ animation:atelier-glint 8s ease-in-out infinite; mask:none;
+}
+@keyframes atelier-glint { 0%,100% { opacity:.35 } 52% { opacity:.85 } }
+main>.atelier-hero { padding-top:40px; padding-bottom:38px; min-height:0 }
+.atelier-hero h1 { line-height:1.04; letter-spacing:-.045em }
+.atelier-lead { font-size:16px; line-height:1.65; max-width:32ch }
+.atelier-hero-actions { align-items:center; gap:10px 20px }
+.atelier-hero .jewel-light-tools { background:var(--atelier-soft); border:0; box-shadow:none; margin-top:22px; border-radius:5px; padding:3px 9px; min-height:48px }
+.atelier-hero .jewel-light-picker button { border-radius:3px; min-height:44px }
+.atelier-hero .folio { border:0; background:var(--atelier-paper); border-radius:4px 27px 4px 27px; padding:24px }
+.atelier-hero .folio-header { border:0; padding-bottom:8px }
+.atelier-hero .folio-header h2 { font-size:clamp(22px,2.2vw,30px); letter-spacing:-.035em }
+.atelier-hero .folio .atelier-tabs { border:0; gap:5px; margin-bottom:12px }
+.atelier-hero .folio .atelier-tabs button { min-height:44px; border:0; border-radius:3px; padding:9px 12px }
+.atelier-hero .folio .atelier-tabs button[aria-selected=true] { background:var(--atelier-action); color:#faf8f0; box-shadow:none }
+.atelier-hero .folio-study { background:#e0e7d5; border-radius:3px }
+.atelier-hero .folio-caption { border:0; padding-top:14px }
+.atelier-seam.folio-thread { margin-top:14px; opacity:.32 }
+.button,.bag,.companion-primary,.campaign-code,.quick-add,.two-page-link,.three-launch {
+ border-radius:4px 15px 4px 15px; min-height:46px; box-shadow:none;
+ transition:background-color 160ms var(--atelier-ease),color 160ms var(--atelier-ease),border-color 160ms var(--atelier-ease),transform 120ms var(--atelier-ease);
+}
+.button:not(.secondary),.bag,.companion-primary,#products .product-card .quick-add,
+:root[data-jewel-scene=light] #products .product-card .quick-add {
+ background:var(--atelier-action); color:#faf8f0; border:1px solid var(--atelier-action);
+}
+.button.secondary,.campaign-code,.two-page-link {
+ background:#e2e8d7; border:1px solid #a6b99a; color:var(--atelier-ink);
+}
+.atelier-hero-actions>.button { padding:8px 11px 8px 20px; gap:18px; min-height:52px }
+.atelier-hero-actions>.button>.ui-icon { width:32px; height:32px; padding:8px; border-radius:50%; background:#f4f1e822; stroke-width:2 }
+#products .quick-add { width:100%; padding:9px 14px; min-height:46px; font-size:13px; font-weight:600 }
+#products .product-card .quick-add:disabled,.companion-primary:disabled,
+:root[data-jewel-scene=light] #products .product-card .quick-add:disabled {
+ background:#dce3d3; color:#4b604f; border-color:#c2cfb8; opacity:1; cursor:default;
+}
+#products .product-card[data-just-added] .quick-add { background:#243d2d; border-color:#243d2d }
+.chips button { min-height:44px; border-radius:4px 13px 4px 13px }
+#products .product-image { border:0; background:#e2e7d9; border-radius:6px }
+#products .product-meta { padding-top:12px; border:0 }
+#products .product-meta b { font-variant-numeric:tabular-nums }
+#products .favorite { min-width:44px; min-height:44px; background:#f4f1e8; border:0 }
+.shop-section { box-shadow:none; background:var(--atelier-paper); border-radius:5px 27px 5px 27px!important }
+.shop-title { border:0; padding-bottom:10px; margin-bottom:16px }
+.shop-title::after { display:none }
+.welcome-campaign { background:#e1e8d5; border:0; border-radius:4px 20px 4px 20px }
+.fair-banner { background:#dfe7d4; border:0; border-radius:4px 20px 4px 20px; margin-top:24px }
+.three-invite { background:#dce6d1; border:0 }
+button:focus-visible,a:focus-visible,summary:focus-visible,select:focus-visible { outline:2px solid var(--atelier-action); outline-offset:4px }
+.button:active:not(:disabled),.bag:active,.quick-add:active:not(:disabled),.companion-primary:active:not(:disabled),.three-launch:active { transform:scale(.98) }
+@media (hover:hover) and (pointer:fine) {
+ .button:not(.secondary):hover,.bag:hover,.companion-primary:hover:not(:disabled),
+ #products .product-card .quick-add:hover:not(:disabled) { background:#253f2d; border-color:#253f2d; color:#fff }
+ .button.secondary:hover,.two-page-link:hover,.campaign-code:hover { background:#d2ddc8; border-color:#7c9471 }
+ .atelier-hero .folio .atelier-tabs button:not([aria-selected=true]):hover { background:#e2e8d7 }
+}
+@media (max-width:760px) {
+ main>.atelier-hero { padding-top:28px; padding-bottom:12px; gap:18px }
+ .hero-jewel-world::before { background-size:760px auto; opacity:.46 }
+ .atelier-hero h1 { font-size:clamp(40px,10.6vw,64px); margin-block:16px }
+ .atelier-lead { max-width:34ch; font-size:15px; margin-top:14px }
+ .atelier-hero-actions { gap:5px 12px; margin-top:18px }
+ .atelier-hero-actions>.button { min-height:50px; font-size:12px; padding-left:15px; gap:12px }
+ .atelier-hero-actions>.text-link { min-height:44px; font-size:12px }
+ .atelier-hero .jewel-light-tools { margin-top:14px }
+ .atelier-hero .folio { margin-top:9px; padding:15px; border-radius:4px 21px 4px 21px }
+ .atelier-hero .folio .atelier-tabs { gap:3px }
+ .atelier-hero .folio .atelier-tabs button { padding-inline:7px; font-size:12px }
+ .atelier-hero .folio-caption { padding-top:11px }
+ .shop-section { margin-top:16px }
+ #products .quick-add { padding-inline:9px; font-size:12px }
+ #products .product-meta h3 button { font-size:19px }
+}
+@media (max-width:360px) {
+ .atelier-hero-actions { align-items:stretch; flex-direction:column; gap:3px }
+ .atelier-hero-actions>.button { justify-content:space-between; align-self:stretch; max-width:270px }
+ .atelier-hero-actions>.text-link { justify-content:flex-start; align-self:flex-start }
+ .atelier-hero .folio .atelier-tabs button { font-size:11px; padding-inline:6px }
+}
+.ambient-static .hero-jewel-world::after { animation:none }
+@media (prefers-reduced-motion:reduce) {
+ .hero-jewel-world::after { animation:none }
+ .button,.bag,.companion-primary,.campaign-code,.quick-add,.two-page-link,.three-launch { transition:none }
+ .button:active,.bag:active,.quick-add:active,.companion-primary:active,.three-launch:active { transform:none }
+}

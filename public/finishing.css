@@ -1,0 +1,17 @@
+/* Small finishing details; preserve Camicat's established palette. */
+.product-card{min-width:0}
+.product-meta{align-items:start;gap:10px}
+.product-meta>button{min-width:0;text-align:left;overflow-wrap:anywhere;line-height:1.45}
+.product-meta>b{white-space:nowrap;font-variant-numeric:tabular-nums;line-height:1.45}
+.product-image{isolation:isolate}
+.product-image .favorite{width:44px;height:44px;transition:background-color .18s,color .18s}
+.product-image .favorite.saved{background:#e2f2e9;color:#346348}
+.quick-add:disabled{opacity:1;background:#dfe8e3;color:#5b6861;cursor:default;box-shadow:none}
+.quick-add:disabled .ui-icon{display:none}
+.product-view:focus-visible,.product-meta>button:focus-visible,.favorite:focus-visible,.quick-add:focus-visible{outline:3px solid #45785b;outline-offset:3px}
+.product-view:focus-visible{outline-offset:-5px}
+.product-card:focus-within .product-image{box-shadow:0 0 0 1px #a8bfb2}
+#resultCount{font-variant-numeric:tabular-nums}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.product-card .product-view img{transition:transform .45s ease}.product-card:hover .product-view img{transform:scale(1.035)}}
+@media(max-width:650px){.product-meta{flex-wrap:wrap;gap:4px 8px}.product-meta>button{flex:1 1 100%}.product-meta>b{font-size:14px}.product-card>p{font-size:11px;line-height:1.6}.product-image .quick-add{min-height:44px}.product-tag{font-size:8px;line-height:1.5;max-width:calc(100% - 62px)}}
+@media(prefers-reduced-motion:reduce){.product-image .favorite{transition:none}}

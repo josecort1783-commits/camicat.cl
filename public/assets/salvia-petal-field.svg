@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 620" fill="none">
+ <defs>
+  <g id="loop">
+   <path d="M0 0C-29-37-37-104-7-128 14-145 40-110 33-68 29-38 11-16 0 0Z"/>
+   <path d="M0 0C-18-35-25-96-6-119 12-139 31-105 24-70 18-40 8-15 0 0Z" opacity=".62"/>
+   <path d="M0 0C-11-38-13-91-4-108 8-129 21-99 16-69 11-43 4-16 0 0Z" opacity=".38"/>
+  </g>
+  <g id="blossom">
+   <use href="#loop"/><use href="#loop" transform="rotate(60)"/><use href="#loop" transform="rotate(120)"/>
+   <use href="#loop" transform="rotate(180)"/><use href="#loop" transform="rotate(240)"/><use href="#loop" transform="rotate(300)"/>
+   <circle r="9"/><circle r="4"/>
+  </g>
+ </defs>
+ <g stroke="#496348" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+  <path opacity=".50" d="M1009-28C857 1 855 108 927 191s64 203-86 280-153 133-106 179"/>
+  <path opacity=".30" d="M1022-29C870 2 868 108 940 191s64 203-86 280-153 133-106 179"/>
+  <g transform="translate(934 119) rotate(-17) scale(.92)" opacity=".66"><use href="#blossom"/></g>
+  <g transform="translate(72 495) rotate(28) scale(.60)" opacity=".51"><use href="#blossom"/></g>
+  <path opacity=".42" d="M-10 590C90 562 121 506 170 528c41 18 29 60-16 56-42-4-43-42-4-65s112-23 194 9M-10 605c115-21 134-80 173-67"/>
+  <path opacity=".48" d="M817 493c21-37 67-28 68-55-36-9-59 18-68 55Zm-26 29c-7-35-54-39-56-68 42-1 56 33 56 68Z"/>
+ </g>
+ <g stroke="#f4f0d9" stroke-width="1.4" stroke-linecap="round" opacity=".88">
+  <path d="M826 68v24m-12-12h24m-18-6 12 12m-12 0 12-12m179 268v14m-7-7h14M157 438v18m-9-9h18m36 57v10m-5-5h10"/>
+  <circle cx="884" cy="229" r="3"/><circle cx="896" cy="235" r="1.5"/><circle cx="123" cy="587" r="2"/>
+ </g>
+</svg>

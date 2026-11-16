@@ -1,0 +1,83 @@
+/* Camicat's opening spread: a real piece, a wire sketch, and a paper label. */
+:root { --folio-paper: #f5f1e5; --folio-sage: #dce5d3; --folio-ink: #293d30; --folio-edge: #bac7b1; }
+main > .atelier-hero { grid-template-columns: minmax(0,.86fr) minmax(0,1.14fr); gap: 18px clamp(20px,4vw,54px); }
+.atelier-hero .folio {
+  min-width: 0; width: 100%; max-width: 580px; margin-inline: auto; padding: clamp(12px,2vw,22px);
+  background: var(--folio-paper); border-radius: 19px 5px 19px 5px; color: var(--folio-ink);
+}
+.atelier-hero .folio-header {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  padding-bottom: 9px; border-bottom: 1px solid var(--folio-edge);
+}
+.atelier-hero .folio-header h2 { margin: 0; color: inherit; font: 400 clamp(1.15rem,2vw,1.64rem)/1.1 Georgia,serif; }
+.atelier-hero .folio-header #atelierPieceNumber { flex: none; color: #526552; font-size: .78rem; font-variant-numeric: tabular-nums; }
+.atelier-hero .folio .atelier-tabs {
+  display: flex; justify-content: flex-start; flex-wrap: wrap; gap: 5px; margin: 8px 0 10px;
+  text-align: left;
+}
+.atelier-hero .folio .atelier-tabs button { min-height: 44px; padding: 5px 10px; border-radius: 4px; color: var(--folio-ink); }
+.atelier-hero .folio .atelier-tabs button[aria-selected="true"] { background: #405944; color: #faf7ec; }
+.atelier-hero .folio-spread { display: grid; grid-template-columns: minmax(0,1fr) minmax(72px,.34fr); gap: 8px; align-items: stretch; }
+.atelier-hero .folio-specimen { min-width: 0; }
+.atelier-hero .folio .atelier-portrait {
+  display: block; width: 100%; height: clamp(260px,27vw,357px); padding: 0; overflow: hidden;
+  border-radius: 5px; border: 0; background: #e4e8db;
+}
+.atelier-hero .folio .atelier-portrait::before { display: none; }
+.atelier-hero .folio .atelier-portrait img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center 48%; }
+.atelier-hero .folio .atelier-portrait img[src="assets/joya-13.webp"] { object-position: center 59%; scale: 1.12; transform-origin: center 62%; }
+.atelier-hero .folio .atelier-portrait img[src="assets/joya-15.webp"] { object-position: center 69%; scale: 1.25; transform-origin: center 68%; }
+.atelier-hero .folio .portrait-open {
+  left: auto; right: 8px; bottom: 8px; gap: 9px; min-height: 38px; padding: 6px 9px;
+  font-size: .82rem; color: var(--folio-ink); background: var(--folio-paper);
+}
+.atelier-hero .folio-study {
+  position: relative; isolation: isolate; display: grid; align-content: center; justify-items: center; gap: 6px;
+  padding: 8px 4px; overflow: hidden; background: var(--folio-sage); border-radius: 5px;
+}
+.atelier-hero .folio-drawing { width: min(100%,140px); height: auto; stroke: #405944; stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }
+.atelier-hero .folio-fine { opacity: .53; }
+.atelier-hero .folio-drawing > g { display: none; }
+.atelier-hero .folio[data-study="wire"] .folio-wire,
+.atelier-hero .folio[data-study="color"] .folio-color,
+.atelier-hero .folio[data-study="resin"] .folio-resin { display: block; }
+.atelier-hero .folio[data-study="resin"] .folio-study { background: #e8ded3; }
+.atelier-hero .folio[data-study="resin"] .folio-drawing { stroke: #734f49; }
+.atelier-hero .folio[data-study="none"] .folio-study { display: none; }
+.atelier-hero .folio[data-study="none"] .folio-spread { grid-template-columns: minmax(0,1fr); }
+.atelier-hero .folio-study-label { text-align: center; font: italic .8rem Georgia,serif; color: #445b47; }
+.atelier-hero .folio-caption { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,.8fr); gap: 10px; align-items: center; padding: 12px 0 0; }
+.atelier-hero .folio-name { min-width: 0; }
+.atelier-hero .folio-name > span { display: block; overflow-wrap: anywhere; font: 400 clamp(1.18rem,2.3vw,1.65rem)/1.07 Georgia,serif; }
+.atelier-hero .folio-name small { display: block; margin-top: 4px; font-size: .77rem; color: #4f6250; }
+.atelier-hero .folio .atelier-piece-note { min-height: 0; margin: 0; text-align: left; font-size: .84rem; }
+.atelier-hero .folio button:focus-visible { outline: 2px solid #2f4936; outline-offset: 2px; }
+.atelier-hero .folio-thread { width: min(100%,460px); margin-block: 0 2px; }
+#coleccion .product-card:focus-within .product-image { outline: 2px solid #536d52; outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) {
+  .atelier-hero .folio .portrait-open { transition: background-color 160ms ease,color 160ms ease; }
+  .atelier-hero .folio .atelier-portrait:hover .portrait-open { background: #405944; color: #faf7ec; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.ambient-static):not(.craft-keyboard) .folio-trace,
+  :root:not(.ambient-static):not(.craft-keyboard) .folio-wire > use { animation: folio-draw 720ms cubic-bezier(.22,.61,.36,1) var(--folio-delay,0ms) both; }
+  .folio-wire > use:nth-of-type(2n) { --folio-delay: 45ms; }
+  .folio-wire > use:nth-of-type(3n) { --folio-delay: 90ms; }
+}
+@keyframes folio-draw { from { stroke-dasharray: 1; stroke-dashoffset: 1; } to { stroke-dasharray: 1; stroke-dashoffset: 0; } }
+@media (max-width: 760px) {
+  main > .atelier-hero { padding-bottom: 8px; }
+  .atelier-hero .folio { margin-top: 16px; }
+  .atelier-hero .folio .atelier-portrait { height: clamp(172px,53vw,300px); }
+  .atelier-hero .folio .atelier-tabs button { font-size: .78rem; padding-inline: 8px; }
+  .atelier-hero .folio-caption { padding-top: 10px; }
+  .atelier-hero .folio-thread { margin-top: 10px; }
+}
+@media (max-width: 360px) {
+  .atelier-hero .folio .atelier-tabs { gap: 2px; }
+  .atelier-hero .folio .atelier-tabs button { font-size: .72rem; padding-inline: 6px; }
+  .atelier-hero .folio-caption { grid-template-columns: minmax(0,1fr); gap: 5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .atelier-hero .folio .portrait-open { transition: none; }
+}

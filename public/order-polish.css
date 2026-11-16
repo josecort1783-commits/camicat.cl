@@ -1,0 +1,16 @@
+/* Sage and linen continue through the cart and order review. */
+#cartDialog,#orderDialog{background:#f5f2e8;color:#293e30}
+#cartDialog .cart-fixed-head,#orderDialog .checkout-toolbar{background:#eeeede;border-color:#bbc9b0}
+#cartDialog .cart-count-badge,#orderDialog .checkout-steps li span{background:#dde7d3;color:#37533c}
+#orderDialog .checkout-steps li[aria-current="step"] span{background:#3d5643;color:#faf8ef}
+#cartDialog .cart-benefit,#cartDialog .cart-benefit.applied{background:#e6eddc;border-color:#b1c4a5}
+#cartDialog .qty,#cartDialog .qty input{background:#faf8ef;color:#304733}
+#cartDialog .cart-line{border-color:#c7d0bd}
+#cartDialog .cart-line p,#cartDialog .cart-save,#cartDialog .cart-price-note{color:#475c42}
+#cartDialog .cart-line p,#cartDialog .cart-save{font-size:12px}
+#cartDialog #cartBottom{background:#f7f4ea;border-color:#bbc9b0}
+#orderDialog .delivery-option{background:#f9f6ed;border-color:#bac8ae}
+#orderDialog .delivery-option:has(input:checked),#orderDialog .checkout-summary{background:#e7ecde;border-color:#9bad91}
+#orderDialog .checkout-header h2 em{color:#4c6648}
+#orderDialog #contactOrder{border-color:#819777;color:#34523b}
+@media(max-width:650px){#cartDialog .cart-line p{font-size:11px}#cartDialog .cart-save{font-size:11px}#cartDialog #cartBottom{padding-bottom:max(12px,env(safe-area-inset-bottom))}}

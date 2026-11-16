@@ -1,0 +1,58 @@
+/* Camicat: wire sketches behind the portrait and a paper label for each piece. */
+.atelier-hero .salvia-petal-field {
+  position: absolute;
+  inset: 0;
+  background: url("assets/salvia-petal-field.svg") center center / 100% auto no-repeat;
+  opacity: .88;
+}
+:root[data-jewel-scene="light"] .atelier-hero .salvia-petal-field { opacity: .48; }
+main > .atelier-hero + #coleccion { margin-top: 18px; }
+main > #coleccion + .fair-banner { margin-top: var(--finish-gap); }
+
+#productDialog { width: min(900px, calc(100% - 24px)); background: #f4f1e8; color: #293d30; border-radius: 14px; }
+#productDialog .product-detail-layout { grid-template-columns: minmax(0, .94fr) minmax(0, 1.06fr); align-items: start; }
+#productDialog .detail-media { display: grid; gap: 10px; min-width: 0; padding: 20px 0 20px 20px; }
+#productDialog .detail-photo { height: clamp(340px, 66dvh, 560px); min-height: 0; background: #e3e8da; border-radius: 8px; overflow: hidden; }
+#productDialog .detail-photo > img { height: 100%; object-fit: contain; }
+#productDialog .detail-photo > span { background: #f4f1e8; color: #293d30; font-size: 14px; }
+#productDialog .detail-copy { padding: 36px 26px 24px; min-width: 0; }
+#productDialog .detail-category { display: block; font-size: .85rem; color: #4b614b; }
+#productDialog .detail-copy h2 { margin: 6px 30px 8px 0; font-size: clamp(1.85rem, 4vw, 2.65rem); line-height: 1.08; font-family: Georgia, serif; font-weight: 400; overflow-wrap: anywhere; }
+#productDialog .detail-price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 10px; margin: 0 0 14px; font-size: 1.28rem; }
+#productDialog .detail-price small { font-family: inherit; font-size: .75rem; color: #4b614b; }
+#productDialog .detail-description { margin: 0; font-size: .98rem; line-height: 1.55; }
+#productDialog .detail-facts { display: grid; gap: 9px; margin: 16px 0; }
+#productDialog .detail-facts > div { display: grid; grid-template-columns: minmax(6.5rem, .45fr) minmax(0, 1fr); gap: 6px 12px; font-size: .875rem; line-height: 1.45; }
+#productDialog .detail-facts dt { font-weight: 700; }
+#productDialog .detail-facts dd { margin: 0; overflow-wrap: anywhere; }
+#productDialog .detail-delivery { padding: 12px 14px; border-radius: 7px; background: #e1e8d8; }
+#productDialog .detail-delivery p { margin: 0; font-size: .875rem; line-height: 1.45; }
+#productDialog .detail-delivery p + p { margin-top: 6px; }
+#productDialog #detailAdd { margin-top: 14px; min-height: 46px; }
+#productDialog .detail-worn { display: flex; align-items: center; text-align: left; gap: 10px; padding: 6px 10px; border-radius: 6px; background: #e1e8d8; color: #293d30; min-height: 44px; }
+#productDialog .detail-worn img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+#productDialog .detail-worn span { display: flex; align-items: center; gap: 8px; }
+#photoDialog { background: #f4f1e8; color: #293d30; }
+#photoDialog .product-lightbox { margin: 0; }
+#photoDialog .photo-stage { display: grid; place-items: center; overflow: hidden; height: clamp(240px, 58dvh, 600px); border-radius: 7px; background: #e0e7d8; }
+#photoDialog #fullPhotoImage { display: block; width: 100%; height: 100%; max-height: none; object-fit: contain; }
+#photoDialog .photo-stage.is-detail #fullPhotoImage { transform: scale(1.62); transform-origin: center 53%; }
+#photoDialog .photo-views { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-top: 10px; }
+#photoDialog .photo-views button { min-height: 44px; padding: 6px 8px; border-radius: 5px; color: #293d30; background: #e0e7d8; }
+#photoDialog .photo-views button[aria-pressed="true"] { color: #faf8ef; background: #3d5643; }
+#photoDialog #fullPhotoCaption { font-size: .8125rem; }
+#photoDialog button:focus-visible, #productDialog button:focus-visible { outline: 2px solid #3d5643; outline-offset: 3px; }
+#cartOptions #cartDeliveryNote { font-size: .875rem; line-height: 1.45; }
+@media (max-width: 760px) {
+ .atelier-hero .salvia-petal-field { background-size: auto 66%; background-position: right bottom; opacity: .58; }
+ main > .atelier-hero + #coleccion { margin-top: 12px; }
+}
+@media (max-width: 650px) {
+ #productDialog .product-detail-layout { grid-template-columns: minmax(0, 1fr); }
+ #productDialog .detail-media { padding: 12px 12px 0; }
+ #productDialog .detail-photo { height: clamp(200px, 29dvh, 275px); }
+ #productDialog .detail-copy { padding: 16px 16px 20px; }
+ #productDialog .detail-facts > div { grid-template-columns: minmax(6rem, .45fr) minmax(0, 1fr); }
+ #productDialog .close { top: 16px; right: 16px; }
+ #photoDialog .photo-stage { height: clamp(210px, 51dvh, 480px); }
+}

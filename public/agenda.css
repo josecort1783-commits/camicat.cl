@@ -1,0 +1,27 @@
+.agenda-board{width:min(1120px,calc(100% - 48px));margin:26px auto;padding:clamp(22px,4.3vw,49px);background:#f3f1e7;border:1px solid #8fa27f65;border-radius:9px 34px 9px 34px;color:#273c2d}
+.agenda-board-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:23px}
+.agenda-board-head h2{font:400 clamp(33px,4.5vw,52px)/1.06 Georgia,serif;letter-spacing:-.04em;margin:9px 0 10px}
+.agenda-board-head h2 em{font-style:italic;color:#506a46}
+.agenda-board-head p,.agenda-note{font-size:15px;line-height:1.55;color:#465944;margin:0}
+.agenda-board-head>.ui-icon{width:40px;height:40px;flex:none;color:#607a53}
+.agenda-note{margin-bottom:14px}
+.agenda-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.agenda-card{min-width:0;min-height:176px;padding:17px 15px 15px;border-radius:17px 5px 17px 5px;background:#e0e8d7;border:1px solid #b0bea4;color:#273c2d;overflow-wrap:anywhere}
+.agenda-card:nth-child(2){background:#efe6d1;border-color:#cbbd9d}
+.agenda-card:nth-child(3){background:#e4e8da;border-color:#b6c0a8}
+.agenda-card:nth-child(4){background:#eadfd8;border-color:#c7b5a9}
+.agenda-date{display:flex;align-items:center;gap:8px;border-bottom:1px solid #76866b55;padding-bottom:8px;min-height:44px;color:#415a3b}
+.agenda-date>span{font:400 35px/.92 Georgia,serif;letter-spacing:-.04em}
+.agenda-date small,.agenda-month{font-size:10px;font-weight:650;line-height:1.35;text-transform:uppercase;letter-spacing:.06em}
+.agenda-fixed>.ui-icon{height:24px;width:24px}
+.agenda-card h3{font:400 clamp(19px,2vw,24px)/1.13 Georgia,serif;letter-spacing:-.03em;margin:11px 0 6px}
+.agenda-card p{font-size:13px;line-height:1.5;color:#42533d;margin:0}
+.agenda-card p>.ui-icon{width:13px;height:13px;margin-right:4px;vertical-align:-2px}
+.agenda-card .agenda-hours{margin-top:5px}
+.agenda-open-slot .agenda-date{color:#5c6b51}
+@media(max-width:760px){.agenda-board{width:calc(100% - 24px);margin:18px auto;padding:21px 15px}.agenda-board-head{margin-bottom:15px}.agenda-board-head p,.agenda-note{font-size:13px}.agenda-board-head>.ui-icon{width:29px;height:29px}.agenda-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.agenda-card{min-height:143px;padding:12px 10px}.agenda-card h3{font-size:19px}.agenda-card p{font-size:12px}.agenda-date>span{font-size:29px}.agenda-date small{font-size:9px}}
+
+/* Purchase checks sit next to the controls they affect. */
+.stock-alert{margin:9px 0;padding:11px 13px;border:1px solid #c4ad82;border-radius:7px;background:#efe5cb;color:#513e28;font-size:13px;line-height:1.55}
+.qty input:disabled{opacity:.66}
+#cartStockNotice[hidden],#reviewStockNotice[hidden],#contactOrder[hidden]{display:none!important}
