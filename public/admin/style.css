@@ -160,7 +160,7 @@ body{background:radial-gradient(ellipse at 100% 0,#d9dec2aa,transparent 58%),var
 }
 
 /* This route never offers the local demo before staff authentication. */
-body[data-staff-panel=locked] > :not(#staffGate):not(#connectionDialog):not(#toast) { display:none !important }
+body[data-staff-panel=locked] > :not(#staffGate):not(#connectionDialog):not(#staffMfaGate):not(#toast) { display:none !important }
 body[data-staff-panel=locked] #connectionDialog .setup-details { display:none }
 body[data-staff-panel=open] #staffGate { display:none }
 .staff-gate { min-height:100svh; display:grid; place-items:center; padding:24px; background:#e1e8d8 }
