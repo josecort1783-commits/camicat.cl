@@ -1,0 +1,82 @@
+[
+  {
+    "id": "flor-verde",
+    "name": "Flor Esmeralda",
+    "price": 14990,
+    "category": "Aros",
+    "image": "assets/joya-0.webp",
+    "description": "Un diseño floral de Camicat con delicados hilos plateados y detalles verdes. Una pieza para darle personalidad a tu look. Materiales y medidas por confirmar.",
+    "available": true,
+    "tag": "Diseño floral"
+  },
+  {
+    "id": "flor-dorada",
+    "name": "Flor Dorada",
+    "price": 14990,
+    "category": "Aros",
+    "image": "assets/joya-7.webp",
+    "description": "Flores de líneas doradas y una silueta liviana a la vista. Fotografía original de Camicat. Consulta las dimensiones y materiales antes de comprar.",
+    "available": true,
+    "tag": "Hecho a mano"
+  },
+  {
+    "id": "jardin-color",
+    "name": "Jardín de Color",
+    "price": 11990,
+    "category": "Aros",
+    "image": "assets/joya-2.webp",
+    "description": "Una selección de aros con detalles de color y terminaciones claras. Indica a Camicat qué combinación de la fotografía te gustaría consultar.",
+    "available": true,
+    "tag": "Toques de color"
+  },
+  {
+    "id": "negro-dorado",
+    "name": "Noche Dorada",
+    "price": 9990,
+    "category": "Aros",
+    "image": "assets/joya-4.webp",
+    "description": "Un contraste entre tonos negros y dorados para acompañar tus días. La fotografía muestra alternativas de Camicat; confirma el modelo que prefieres.",
+    "available": true,
+    "tag": "Para cada día"
+  },
+  {
+    "id": "collar-color",
+    "name": "Encuentro de Color",
+    "price": 12990,
+    "category": "Collares",
+    "image": "assets/joya-8.webp",
+    "description": "Un detalle con tonos turquesa y violeta, cordón oscuro y acentos dorados. Consulta largo, materiales y disponibilidad directamente con Camicat.",
+    "available": true,
+    "tag": "Con personalidad"
+  },
+  {
+    "id": "flor-turquesa",
+    "name": "Flor Turquesa",
+    "price": 13990,
+    "category": "Aros",
+    "image": "assets/joya-10.webp",
+    "description": "Flores negras con centro dorado y un toque de turquesa que se lleva las miradas. Diseño fotografiado por Camicat. Materiales y medidas por confirmar.",
+    "available": true,
+    "tag": "Contrastes que encantan"
+  },
+  {
+    "id": "borlas-jardin",
+    "name": "Borlas Jardín",
+    "price": 15990,
+    "category": "Aros",
+    "image": "assets/joya-13.webp",
+    "description": "Flores de tonos suaves y borlas verdes. Una combinación que aparece en las publicaciones de Camicat. Confirma materiales, medidas y disponibilidad con la marca.",
+    "available": true,
+    "tag": "Flores y borlas"
+  },
+  {
+    "id": "resina-roja",
+    "name": "Rojo Resina",
+    "price": 12990,
+    "category": "Aros",
+    "image": "assets/joya-15.webp",
+    "description": "Diseño de resina roja con detalles negros y dorados, fotografiado por Camicat. Nombre y precio de demostración. Consulta dimensiones y composición.",
+    "available": true,
+    "tag": "Colección resina"
+  }
+]
