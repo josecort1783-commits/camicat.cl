@@ -32,3 +32,6 @@
 #staffAuditNav[hidden],#staffAudit[hidden],#pedidos label[hidden]{display:none}
 .order-store-link{white-space:nowrap;font-size:.82rem}
 #staffMfaQr{background:white;padding:.5rem;border-radius:8px;margin-bottom:.75rem}
+
+.order-card [hidden],.order-dialog [hidden]{display:none!important}
+.order-card .order-status:empty,.order-dialog .order-status:empty{display:none}
