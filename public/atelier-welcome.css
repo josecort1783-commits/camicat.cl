@@ -1,0 +1,83 @@
+/* Small finishes that echo the wire pieces in the collection. */
+body > header:has(> .header-actions) {
+  transition: box-shadow 210ms ease-out, border-color 210ms ease-out;
+}
+body > header.shop-header-raised {
+  border-bottom-color: #75907860;
+  box-shadow: 0 7px 20px #263c3020;
+}
+main > .atelier-hero .atelier-origin {
+  position: relative;
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  gap: 9px;
+  align-items: center;
+  color: #304538;
+  letter-spacing: .11em;
+}
+main > .atelier-hero .atelier-origin::after {
+  content: "";
+  width: clamp(22px, 5vw, 46px);
+  height: 1px;
+  margin-left: 3px;
+  background: linear-gradient(90deg, #806c43, #806c4300);
+}
+main > .atelier-hero .atelier-origin .ui-icon {
+  color: #665534;
+  width: 19px;
+  height: 19px;
+}
+main > .atelier-hero .folio {
+  border: 1px solid #8e9e84;
+  box-shadow: 0 13px 30px #26392e21, inset 0 1px 0 #fffaf0;
+}
+main > [data-camicat-page][id] {
+  scroll-margin-top: 10px;
+}
+html {
+  scroll-padding-top: calc(var(--camicat-header-height, 96px) + 10px);
+}
+:is(#catalogTitle,#customTitle,#threeInviteTitle,#fairTitle,#heartStoryTitle,#featureTitle,#styleStudioTitle,#guideTitle)::after {
+  content: "";
+  display: block;
+  width: 61px;
+  max-width: 100%;
+  height: 3px;
+  margin-top: .38em;
+  background:
+    radial-gradient(circle at 1.5px 50%, #816637 1.3px, transparent 1.5px),
+    linear-gradient(90deg,#92794f,#92794f42) left 8px center / calc(100% - 8px) 1px no-repeat;
+}
+.atelier-hero-actions > .button:active,
+.header-actions #cartOpen:active {
+  scale: .98;
+}
+@media (max-width: 760px) {
+  html { scroll-padding-top: calc(var(--camicat-header-height, 125px) + 8px); }
+  main > .atelier-hero .atelier-origin { font-size: 10px; gap: 7px; }
+  main > .atelier-hero .folio { box-shadow: 0 8px 18px #26392e1b; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.ambient-static) .atelier-opening .atelier-intro {
+    animation: camicat-opening 360ms cubic-bezier(.22,.75,.27,1) both;
+  }
+  html:not(.ambient-static) .atelier-opening .folio {
+    animation: camicat-opening 440ms 35ms cubic-bezier(.22,.75,.27,1) both;
+  }
+  html:not(.ambient-static) .atelier-heading-arrival {
+    animation: camicat-heading 345ms cubic-bezier(.22,.75,.27,1) both;
+  }
+  @keyframes camicat-opening {
+    from { opacity: .72; translate: 0 7px; }
+    to { opacity: 1; translate: 0 0; }
+  }
+  @keyframes camicat-heading {
+    from { opacity: .78; translate: 0 5px; }
+    to { opacity: 1; translate: 0 0; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body > header:has(> .header-actions) { transition: none; }
+  .atelier-hero-actions > .button:active,.header-actions #cartOpen:active { scale: none; }
+}
