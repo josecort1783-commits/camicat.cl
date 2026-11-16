@@ -1,7 +1,7 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');const {readFileSync}=require('node:fs');const {JSDOM}=require('jsdom');const {build}=require('esbuild');
 let bundle;
 async function setup(storage={},cloud=null,staffOnly=false){
- if(!bundle){bundle=(await build({entryPoints:['src/app.js'],bundle:true,write:false,format:'iife',plugins:[{name:'cloud-mock',setup(b){b.onResolve({filter:/^\.\/cloud\.js$/},()=>({path:'cloud',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:`export const client={auth:{signOut:async()=>{},signInWithPassword:async()=>({error:new Error('no login')})}};export async function checkAccess(){return globalThis.__testCloud?.access??null}export async function loadCatalog(){if(globalThis.__testCloud)return globalThis.__testCloud.current;throw Error('offline')}export async function publishCatalog(items,revision){if(globalThis.__testCloud)return globalThis.__testCloud.publish(items,revision);throw Error('offline')}`}));}}]})).outputFiles[0].text;}
+ if(!bundle){bundle=(await build({entryPoints:['src/app.js'],bundle:true,write:false,format:'iife',plugins:[{name:'cloud-mock',setup(b){b.onResolve({filter:/^\.\/cloud\.js$/},()=>({path:'cloud',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:`export const client={auth:{signOut:async()=>{},resetPasswordForEmail:async(email,options)=>{globalThis.__resetRequest={email,redirectTo:options.redirectTo};return {error:null}},signInWithPassword:async()=>({error:new Error('no login')})}};export async function checkAccess(){return globalThis.__testCloud?.access??null}export async function loadCatalog(){if(globalThis.__testCloud)return globalThis.__testCloud.current;throw Error('offline')}export async function publishCatalog(items,revision){if(globalThis.__testCloud)return globalThis.__testCloud.publish(items,revision);throw Error('offline')}`}));}}]})).outputFiles[0].text;}
  const dom=new JSDOM((staffOnly?readFileSync('src/index.html','utf8'):readFileSync('src/index.html','utf8').replace(' data-staff-panel="locked"','')),{url:'https://admin.example',runScripts:'outside-only'}),w=dom.window;w.structuredClone=structuredClone;w.crypto.randomUUID=undefined;w.confirm=()=>true;w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};w.createImageBitmap=async()=>({width:10,height:10,close(){}});w.HTMLCanvasElement.prototype.getContext=()=>({drawImage(){}});w.HTMLCanvasElement.prototype.toDataURL=()=> 'data:image/webp;base64,UklGRg==';for(const [k,v]of Object.entries(storage))w.localStorage.setItem(k,v);if(cloud)w.__testCloud=cloud;w.eval(bundle);if(cloud)await new Promise(setImmediate);return {dom,w,$:s=>w.document.querySelector(s)};
 }
 test('edit stock, filter, undo, update demo and restore in another load',async()=>{const b=await setup(),{$,w}=b;assert.equal(w.document.querySelectorAll('.product-row').length,8);assert.equal($('#publish').disabled,true);$('[data-edit="flor-dorada"].edit-button').click();$('#stockUnknown').checked=false;$('#stockUnknown').dispatchEvent(new w.Event('change'));$('#productStock').value='3';$('#productPrice').value='16990';$('#productForm').dispatchEvent(new w.Event('submit',{cancelable:true}));assert.equal($('#statLow').textContent,'1');assert.equal($('#publish').disabled,false);assert.match($('[data-id="flor-dorada"] .product-price').textContent,/16.990/);$('[data-filter="low"]').click();assert.equal(w.document.querySelectorAll('.product-row').length,1);$('[data-stock="flor-dorada"][data-step="-1"]').click();assert.equal($('[data-id="flor-dorada"] .stock-control b').textContent,'2');$('#undo').click();assert.equal($('[data-id="flor-dorada"] .stock-control b').textContent,'3');$('#publish').click();assert.match($('#reviewList').textContent,/Stock: Sin definir → 3 unidades/);assert.match($('#reviewList').textContent,/Precio:.*16.990/);$('#confirmPublish').click();assert.equal($('#publish').disabled,true);const storage=Object.fromEntries(Object.keys(w.localStorage).map(k=>[k,w.localStorage.getItem(k)]));const restored=await setup(storage);assert.equal(restored.$('[data-id="flor-dorada"] .stock-control b').textContent,'3');restored.dom.window.close();b.dom.window.close();});
@@ -125,4 +125,18 @@ test('unified admin stays locked until device session and membership are verifie
  await member.$('#logout').onclick();
  assert.equal(member.w.document.body.dataset.staffPanel,'locked');
  member.dom.window.close();
+});
+
+test('staff password reset requires a valid email and returns to the panel',async()=>{
+ const b=await setup({},null,true),{$,w}=b;
+ $('#staffLogin').click();
+ await $('#staffReset').onclick();
+ assert.equal(w.__resetRequest,undefined);
+ $('#loginEmail').value='staff@example.test';
+ await $('#staffReset').onclick();
+ assert.equal(w.__resetRequest.email,'staff@example.test');
+ assert.equal(w.__resetRequest.redirectTo,'https://www.camicat.cl/admin');
+ assert.match($('#staffResetStatus').textContent,/recibirás un enlace/);
+ assert.equal(w.document.body.dataset.staffPanel,'locked');
+ b.dom.window.close();
 });

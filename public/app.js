@@ -172,8 +172,8 @@ $('#cartItems').addEventListener('change',event=>{
 $('#cartUndoButton').onclick=()=>{if(!lastCartRemoval)return;const {id,quantity}=lastCartRemoval;const limit=quantityLimit(products.find(p=>p.id===id));if(limit){cart[id]=Math.min(limit,(cart[id]||0)+quantity);persistCart();restoreCartControl(id,'[data-cart-quantity]');}lastCartRemoval=null;$('#cartUndo').hidden=true;announceCart();};
 $('#year').textContent=new Date().getFullYear();
 function renderAdmin(){$('#adminList').innerHTML=products.map(p=>`<div class="admin-item"><img src="${p.image}" alt=""><div><strong>${escapeHtml(p.name)}</strong><small>${money(p.price)} · ${escapeHtml(p.category)}</small></div><div><button data-edit="${escapeHtml(p.id)}">Editar</button><button data-delete="${escapeHtml(p.id)}">Eliminar</button></div></div>`).join('')}
-$('#adminOpen').hidden=new URLSearchParams(window.location.search).get('editar')!=='1';
-$('#adminOpen').onclick=()=>{renderAdmin();openDialog('#adminDialog')};
+$('#adminOpen').hidden=true;
+
 function resetForm(){$('#productForm').reset();$('#editId').value='';formImage='';$('#imagePreview').hidden=true;$('#formTitle').textContent='Agregar un producto'}
 $('#resetForm').onclick=resetForm;
 async function optimizeImage(file){if(file.size>10*1024*1024)throw Error('La foto debe pesar menos de 10 MB.');if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Usa una foto JPG, PNG o WebP.');const bitmap=await createImageBitmap(file);const scale=Math.min(1,1000/Math.max(bitmap.width,bitmap.height));const canvas=document.createElement('canvas');canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();return canvas.toDataURL('image/webp',.83)}

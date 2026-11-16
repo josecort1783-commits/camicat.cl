@@ -5,10 +5,26 @@ import {client,checkAccess,loadCatalog,publishCatalog} from './cloud.js';
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const agenda=createAgenda(client);
 const staffOnly=document.body.hasAttribute('data-staff-panel');
-const staffInvited=staffOnly&&new URLSearchParams(location.hash.slice(1)).get('type')==='invite';
+const staffAuthType=staffOnly?new URLSearchParams(location.hash.slice(1)).get('type'):null;
+let staffSetup=['invite','recovery'].includes(staffAuthType);
 if(staffOnly){
  $('#staffLogin').disabled=false;
  $('#staffLogin').onclick=()=>open('#connectionDialog');
+ $('#staffReset').onclick=async()=>{
+  const field=$('#loginEmail'),button=$('#staffReset'),status=$('#staffResetStatus');
+  if(!field.reportValidity()){field.focus();return;}
+  button.disabled=true;
+  status.textContent='';
+  try{
+   const {error}=await client.auth.resetPasswordForEmail(field.value.trim(),{redirectTo:'https://www.camicat.cl/admin'});
+   if(error)throw error;
+   status.textContent='Si tu cuenta está habilitada, recibirás un enlace. Revisa también el correo no deseado.';
+  }catch{status.textContent='No pudimos solicitar el enlace. Intenta nuevamente en unos minutos.';}
+  finally{button.disabled=false;}
+ };
+ if(typeof client.auth.onAuthStateChange==='function')client.auth.onAuthStateChange(event=>{
+  if(event==='PASSWORD_RECOVERY')staffSetup=true;
+ });
  $('#staffPasswordForm').onsubmit=async e=>{
   e.preventDefault();
   const button=e.currentTarget.querySelector('button');
@@ -18,7 +34,8 @@ if(staffOnly){
    const {error}=await client.auth.updateUser({password:input.value});
    if(error)throw error;
    input.value='';
-   status.textContent='Contraseña actualizada.';
+   status.textContent='Contraseña actualizada. Ya puedes entrar con ella.';
+   if(staffSetup){staffSetup=false;$('#connectionTitle').textContent='Tu cuenta';}
   }catch{status.textContent='No pudimos cambiar tu contraseña. Comprueba que tu sesión siga abierta.';}
   finally{button.disabled=false;}
  };
@@ -123,6 +140,6 @@ $('#exportBackup').onclick=()=>{const blob=new Blob([JSON.stringify({version:1,e
 $('#resetDemo').onclick=()=>{if(mode!=='demo'){toast('Esta opción es solo para la prueba.');return;}if(!confirm('¿Restaurar la prueba con las ocho piezas iniciales? La tienda pública no cambiará.'))return;saved=structuredClone(BASE);draft=structuredClone(BASE);write('-saved',saved);write('-draft',draft);undoState=null;$('#undoBar').hidden=true;render();toast('Prueba restaurada.');};
 render();
 // A stored session is checked by the server and membership policy, not trusted as authorization.
-checkAccess().then(async access=>{if(access&&(staffOnly||!dirty())){await enterCloud(access);if(staffInvited){open('#connectionDialog');$('#staffPassword').focus();}}}).catch(()=>{});
+checkAccess().then(async access=>{if(access&&(staffOnly||!dirty())){await enterCloud(access);if(staffSetup){$('#connectionTitle').textContent='Define tu contraseña';open('#connectionDialog');$('#staffPassword').focus();}}}).catch(()=>{});
 
 if(staffOnly&&typeof client.auth.onAuthStateChange==='function')client.auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT'){document.body.dataset.staffPanel='locked';}});

@@ -1,0 +1,6 @@
+.staff-header-link { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:44px; padding:7px 11px; border:1px solid #abb99f; border-radius:6px; color:#294333; font-size:12px; font-weight:650; text-decoration:none; white-space:nowrap; }
+.staff-header-link:hover { background:#dce7d6; }
+.staff-header-link:focus-visible { outline:2px solid #36533e; outline-offset:2px; }
+.staff-header-link .short-label { display:none; }
+@media(max-width:650px){header .brand img{width:clamp(92px,27vw,125px)}.staff-header-link{padding-inline:7px;font-size:11px}.staff-header-link .ui-icon,.staff-header-link span:not(.short-label){display:none}.staff-header-link .short-label{display:inline}}
+@media(max-width:360px){header .header-actions{gap:4px}.staff-header-link{padding-inline:6px}.header-actions .two-page-link{padding-inline:5px}.header-actions .two-page-link svg{display:none}}
