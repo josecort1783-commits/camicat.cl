@@ -149,3 +149,15 @@ test('staff password reset requires a valid email and returns to the panel',asyn
  assert.equal(w.document.body.dataset.staffPanel,'locked');
  b.dom.window.close();
 });
+
+test('recovery timeout releases the form and differentiates mail service failures',async()=>{
+ const {recoveryRequest,recoveryMessage}=await import('../src/recovery.js');
+ await assert.rejects(recoveryRequest({resetPasswordForEmail:()=>new Promise(()=>{})},'staff@example.test',8),{code:'recovery_timeout'});
+ assert.match(recoveryMessage({status:504}),/confirmar el envío a tiempo/);
+ const b=await setup({},null,true),{$,w}=b;
+ $('#staffLogin').click();$('#staffReset').click();$('#staffRecoveryEmail').value='staff@example.test';
+ w.__resetError={status:504};
+ await $('#staffRecoveryForm').onsubmit({preventDefault(){}});
+ assert.equal($('#staffRequestLink').disabled,false);assert.match($('#staffResetStatus').textContent,/confirmar el envío a tiempo/);
+ b.dom.window.close();
+});

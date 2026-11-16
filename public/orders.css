@@ -35,3 +35,32 @@
 
 .order-card [hidden],.order-dialog [hidden]{display:none!important}
 .order-card .order-status:empty,.order-dialog .order-status:empty{display:none}
+
+/* Keep the main shopping action separate from account links on narrow screens. */
+@media(max-width:760px){
+ header:has(> .header-actions){
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;
+  gap:6px 8px;padding:8px max(12px,env(safe-area-inset-right)) 8px max(12px,env(safe-area-inset-left));
+ }
+ header:has(> .header-actions)>.brand{grid-area:1 / 1 / 2 / 3;justify-self:start;min-width:0}
+ header:has(> .header-actions)>.brand img{width:clamp(118px,38vw,158px);height:auto;max-width:100%}
+ header .header-actions{display:contents}
+ header .header-actions>#favoritesToggle{display:none}
+ header .header-actions>#cartOpen{grid-area:1 / 3 / 2 / 4;justify-self:end;min-height:44px;white-space:nowrap;min-width:0;font-size:12px;padding:6px 8px}
+ header .header-actions>#cartOpen span{margin-left:4px;padding:2px 5px}
+ header .header-actions>.two-page-link,header .header-actions>.order-store-link,header .header-actions>.staff-header-link{
+  display:flex;min-width:0;max-width:none;min-height:42px;align-items:center;justify-content:center;
+  box-sizing:border-box;padding:5px 4px;margin:0;border:1px solid #bfcbba;border-radius:8px;
+  background:#eef1e8;color:#294333;font-size:12px;font-weight:650;text-decoration:none;line-height:1.2;text-align:center;white-space:normal;box-shadow:none;
+ }
+ header .header-actions>.two-page-link{grid-area:2 / 1 / 3 / 2}
+ header .header-actions>.order-store-link{grid-area:2 / 2 / 3 / 3}
+ header .header-actions>.staff-header-link{grid-area:2 / 3 / 3 / 4}
+ header .header-actions>.two-page-link>span,header .staff-header-link>svg,header .staff-header-link>span:not(.short-label){display:none}
+ header .staff-header-link>.short-label{display:inline}
+}
+@media(max-width:360px){
+ header:has(> .header-actions){gap:5px}
+ header .header-actions>#cartOpen{font-size:11px;padding-inline:5px}
+ header .header-actions>.two-page-link,header .header-actions>.order-store-link,header .header-actions>.staff-header-link{font-size:11px}
+}

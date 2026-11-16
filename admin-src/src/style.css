@@ -177,3 +177,10 @@ body[data-staff-panel=open] #staffGate { display:none }
 .staff-feedback[data-kind=error] { background:#f7eadf; color:#612e20; border-color:#d2a899; }
 .staff-feedback[data-kind=success] { background:#e5eddd; color:#294333; }
 #staffPasswordHint { color:#495f4c; }
+
+#connectionDialog .staff-feedback{overflow-wrap:anywhere}
+@media(max-width:650px){
+ #connectionDialog,#staffSecurityDialog,#staffMfaGate{box-sizing:border-box;width:min(calc(100% - 24px),32rem);max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);padding:1.1rem;overflow:auto;overscroll-behavior:contain}
+ #connectionDialog h2{font-size:clamp(1.65rem,7vw,2.15rem);padding-right:2.5rem;line-height:1.15}
+ #connectionDialog input,#staffMfaGate input{font-size:16px;min-width:0;max-width:100%}
+}

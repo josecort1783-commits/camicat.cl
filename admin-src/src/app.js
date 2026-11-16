@@ -1,3 +1,4 @@
+import {recoveryRequest,recoveryMessage} from './recovery.js';
 import {createStaffSecurity} from './security.js';
 import {createOrders} from './orders.js';
 import { createAgenda } from './agenda.js';
@@ -37,15 +38,13 @@ if(staffOnly){
   status.textContent='Solicitando enlace…';
   status.dataset.kind='pending';
   try{
-   const {error}=await client.auth.resetPasswordForEmail(field.value.trim(),{redirectTo:'https://www.camicat.cl/admin'});
+   const {error}=await recoveryRequest(client.auth,field.value);
    if(error)throw error;
-   status.textContent='Si tu cuenta está habilitada, recibirás un enlace. Si no lo ves, revisa Spam y Promociones.';
+   status.textContent='Solicitud recibida. Si el correo tiene acceso, recibirás un enlace, no un código. Revisa también Spam y Promociones.';
    status.dataset.kind='success';
   }catch(error){
    status.dataset.kind='error';
-   status.textContent=error?.status===429||['over_email_send_rate_limit','over_request_rate_limit'].includes(error?.code)
-    ?'Se alcanzó el límite temporal de correos. Si ya pediste un enlace, revisa Spam o Promociones. Evita pedir otro de inmediato.'
-    :'No se pudo enviar el enlace. Revisa tu conexión. Si vuelve a fallar, contacta al encargado de Camicat.';
+   status.textContent=recoveryMessage(error);
   }finally{button.disabled=false;}
  };
  if(typeof client.auth.onAuthStateChange==='function')client.auth.onAuthStateChange(event=>{
