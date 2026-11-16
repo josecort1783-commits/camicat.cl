@@ -170,3 +170,10 @@ body[data-staff-panel=open] #staffGate { display:none }
 .staff-brand { margin:22px 0 20px }
 .staff-brand img { display:block; max-width:100%; height:auto }
 .staff-back { color:#354e3b; display:inline-flex; align-items:center; min-height:44px }
+
+.staff-recovery[hidden], #staffLoginHint[hidden] { display:none }
+.staff-feedback:empty { display:none }
+.staff-feedback { margin:10px 0 2px; padding:10px 12px; border:1px solid #b8c4ae; border-radius:5px; font-size:13px; line-height:1.45; }
+.staff-feedback[data-kind=error] { background:#f7eadf; color:#612e20; border-color:#d2a899; }
+.staff-feedback[data-kind=success] { background:#e5eddd; color:#294333; }
+#staffPasswordHint { color:#495f4c; }
