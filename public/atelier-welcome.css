@@ -81,3 +81,72 @@ html {
   body > header:has(> .header-actions) { transition: none; }
   .atelier-hero-actions > .button:active,.header-actions #cartOpen:active { scale: none; }
 }
+
+/* The wire detail uses the same line weight as the workshop drawings. */
+.atelier-wire-detail {
+  display:block;
+  width:84px;
+  max-width:100%;
+  height:15px;
+  margin-top:.3em;
+  color:#806637;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  pointer-events:none;
+}
+main .atelier-wire-heading::after { display:none; }
+.atelier-wire-detail .wire-tail { opacity:.55; }
+
+main :is(.atelier-hero-actions .button,.quick-add,.portrait-open,.three-launch,#requestCatalogOrder,#requestCustomOrder),
+body > header :is(#cartOpen,.two-page-link,.order-store-link,.staff-header-link) {
+  transition:translate 170ms cubic-bezier(.2,.7,.2,1),scale 120ms ease-out,box-shadow 170ms ease-out,background-color 170ms ease-out;
+}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  main :is(.atelier-hero-actions .button,.quick-add,.portrait-open,.three-launch):not(:disabled):hover,
+  body > header :is(#cartOpen,.two-page-link,.order-store-link,.staff-header-link):hover {
+    translate:0 -2px;
+    box-shadow:0 5px 13px #26392e23;
+  }
+}
+main :is(.atelier-hero-actions .button,.quick-add,.portrait-open,.three-launch,#requestCatalogOrder,#requestCustomOrder):not(:disabled):active,
+body > header :is(#cartOpen,.two-page-link,.order-store-link,.staff-header-link):active {
+  scale:.96;
+  translate:0 0;
+}
+main :is(.atelier-hero-actions .button,.quick-add,.portrait-open,.three-launch):focus-visible,
+body > header :is(#cartOpen,.two-page-link,.order-store-link,.staff-header-link):focus-visible {
+  outline:2px solid #425c49;
+  outline-offset:3px;
+}
+@media (prefers-reduced-motion:no-preference) {
+  html:not(.ambient-static) .atelier-visual-arrival {
+    animation:camicat-visual-in 470ms var(--camicat-visual-delay,0ms) cubic-bezier(.18,.7,.25,1) both;
+  }
+  html:not(.ambient-static) .atelier-heading-arrival .atelier-wire-detail path {
+    stroke-dasharray:1;
+    animation:camicat-wire-drawn 590ms cubic-bezier(.21,.66,.34,1) both;
+  }
+  @keyframes camicat-visual-in {
+    from { opacity:.46; translate:0 clamp(12px,3vw,22px); }
+    to { opacity:1; translate:0 0; }
+  }
+  @keyframes camicat-wire-drawn {
+    from { stroke-dashoffset:1; }
+    to { stroke-dashoffset:0; }
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  main :is(.atelier-hero-actions .button,.quick-add,.portrait-open,.three-launch,#requestCatalogOrder,#requestCustomOrder),
+  body > header :is(#cartOpen,.two-page-link,.order-store-link,.staff-header-link) {
+    transition:none;
+    translate:none;
+    scale:none;
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  main :is(.atelier-hero-actions .button,.quick-add,.portrait-open,.three-launch,#requestCatalogOrder,#requestCustomOrder):not(:disabled):active,
+  body > header :is(#cartOpen,.two-page-link,.order-store-link,.staff-header-link):active { scale:none; translate:none; }
+}
