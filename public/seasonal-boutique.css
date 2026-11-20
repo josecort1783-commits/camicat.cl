@@ -1,0 +1,221 @@
+/* A tonal watermelon palette for Camicat's Christmas storefront. */
+:root[data-jewel-scene=christmas] {
+ --season-cream:#e9aaa7;
+ --season-soft:#d48d92;
+ --season-pine:#4b1e2c;
+ --season-ink:#3d1926;
+ --season-blush:#efb9b1;
+ --season-muted:#68313d;
+ --collection-ink:var(--season-ink);
+ --collection-muted:var(--season-muted);
+ --folio-ink:var(--season-ink);
+ --ink:var(--season-ink);
+ --muted:var(--season-muted);
+}
+.seasonal-edit {display:none}
+:root[data-jewel-scene=christmas] body>header {
+ background:var(--season-cream);border:0;
+}
+:root[data-jewel-scene=christmas] header .header-actions :is(.two-page-link,.staff-header-link,.order-store-link) {
+ background:transparent;color:var(--season-ink);border-color:#b76c77;border-radius:3px;
+}
+:root[data-jewel-scene=christmas] header .bag {border-radius:3px;background:#4b1e2c}
+:root[data-jewel-scene=christmas] .appearance-bar .jewel-light-picker button {border-radius:3px}
+:root[data-jewel-scene=christmas] .christmas-banner {
+ background:#4b1e2c;min-height:64px;padding-block:10px;
+}
+:root[data-jewel-scene=christmas] .christmas-banner p {font-weight:500}
+:root[data-jewel-scene=christmas] main>.atelier-hero {
+ gap:36px;padding-top:32px;padding-bottom:42px;
+}
+:root[data-jewel-scene=christmas] .atelier-hero h1 {
+ font-size:clamp(50px,5.6vw,76px);line-height:1.03;
+}
+:root[data-jewel-scene=christmas] .atelier-lead {font-size:16px;max-width:38ch}
+:root[data-jewel-scene=christmas] .atelier-hero .folio {
+ background:var(--season-soft);padding:14px;border-radius:3px;
+}
+:root[data-jewel-scene=christmas] .atelier-hero .folio .atelier-tabs button {
+ color:var(--season-ink);border-radius:3px;background:transparent;
+}
+:root[data-jewel-scene=christmas] .atelier-hero .folio .atelier-tabs button[aria-selected=true] {
+ background:#4b1e2c;color:var(--season-blush);
+}
+:root[data-jewel-scene=christmas] .atelier-hero .folio .atelier-portrait {
+ height:clamp(310px,31vw,425px);
+}
+:root[data-jewel-scene=christmas] .folio-caption {
+ padding:16px 4px 3px;gap:10px;
+}
+:root[data-jewel-scene=christmas] .folio-caption :is(small,.atelier-piece-note) {color:var(--season-ink)}
+:root[data-jewel-scene=christmas] .atelier-hero .portrait-open {
+ background:var(--season-blush);color:var(--season-ink);border-radius:3px;
+}
+:root[data-jewel-scene=christmas] .seasonal-edit:not([hidden]) {
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;
+ margin-top:28px;
+}
+.seasonal-edit-piece {
+ display:flex;align-items:center;gap:12px;min-width:0;padding:0;border:0;background:none;
+ color:var(--season-blush);text-align:left;font:inherit;cursor:pointer;
+}
+.seasonal-edit-piece img {
+ display:block;flex:none;object-fit:cover;width:76px;height:96px;border-radius:2px;
+}
+.seasonal-edit-piece>span {display:grid;gap:8px;min-width:0}
+.seasonal-edit-piece strong {font:400 18px/1.18 Georgia,serif;overflow-wrap:anywhere}
+.seasonal-edit-piece>span>span {font-size:14px;font-variant-numeric:tabular-nums}
+:root[data-jewel-scene=christmas] .seasonal-edit-piece:focus-visible {
+ outline:2px solid var(--season-blush);outline-offset:5px;
+}
+:root[data-jewel-scene=christmas] #coleccion.shop-section {
+ background:var(--season-cream);border:0;border-radius:3px!important;padding:34px;
+}
+:root[data-jewel-scene=christmas] #coleccion :is(.shop-title h2,.shop-title p,.catalog-reference,.catalog-result,.catalog-sort,.catalog-sort span,.catalog-category) {
+ color:var(--season-ink);
+}
+:root[data-jewel-scene=christmas] #coleccion .shop-title h2 {
+ font-size:clamp(31px,3.6vw,49px);letter-spacing:-.045em;line-height:1.1;
+}
+:root[data-jewel-scene=christmas] #coleccion .shop-title {margin-bottom:20px}
+:root[data-jewel-scene=christmas] #coleccion .catalog-delivery {
+ background:var(--season-soft);color:var(--season-ink);border-radius:3px;padding:12px 14px;
+}
+:root[data-jewel-scene=christmas] #coleccion :is(.chips,.catalog-toolbar) {background:none}
+:root[data-jewel-scene=christmas] #coleccion .chips {
+ display:flex;flex-wrap:wrap;gap:7px;
+}
+:root[data-jewel-scene=christmas] #coleccion .chips button {
+ background:transparent;color:var(--season-ink);border:0;border-radius:3px;min-height:44px;
+}
+:root[data-jewel-scene=christmas] #coleccion .chips button.active {background:#4b1e2c;color:var(--season-blush)}
+:root[data-jewel-scene=christmas] #coleccion .chips .category-count {
+ background:var(--season-blush);color:var(--season-ink);border:0;
+}
+:root[data-jewel-scene=christmas] #coleccion :is(.search,.filter-panel,.filter-panel>summary,.price-filter,.filter-panel-body,#sort,.view-button) {
+ background:var(--season-blush);color:var(--season-ink);border-color:#b36774;box-shadow:none;border-radius:3px;
+}
+:root[data-jewel-scene=christmas] #coleccion :is(.search input,.search input::placeholder,.filter-panel small,.price-filter label,.price-filter b,.text-link) {color:var(--season-ink)}
+:root[data-jewel-scene=christmas] #coleccion .catalog-toolbar {border-color:#b36774}
+:root[data-jewel-scene=christmas] #coleccion .view-button.active {background:var(--season-pine);color:var(--season-blush)}
+:root[data-jewel-scene=christmas] #coleccion .catalog-actions {gap:7px}
+:root[data-jewel-scene=christmas] #coleccion :is(.product-meta h3,.product-meta b) {color:var(--season-ink)}
+:root[data-jewel-scene=christmas] #products .product-meta b {font-size:18px;font-weight:650}
+:root[data-jewel-scene=christmas] #products .product-image {background:var(--season-soft)}
+:root[data-jewel-scene=christmas] #products .favorite {
+ background:var(--season-blush);color:var(--season-ink);border-radius:50%;
+}
+:root[data-jewel-scene=christmas] #products .favorite.saved {background:var(--season-wine);color:var(--season-blush)}
+:root[data-jewel-scene=christmas] #products .catalog-view-label {background:var(--season-blush);color:var(--season-ink)}
+:root[data-jewel-scene=christmas] #products .compare-toggle {color:var(--season-ink)}
+:root[data-jewel-scene=christmas] #products .quick-add {border-radius:3px}
+:root[data-jewel-scene=christmas] #products.product-grid:not(.list-mode) {gap:38px 24px}
+:root[data-jewel-scene=christmas] #coleccion :is(.welcome-campaign,.catalog-trust,.recently-viewed,.recent-pieces,.compare-tray,.catalog-note,.catalog-notes) {
+ background:var(--season-soft);color:var(--season-ink);border:0;border-radius:3px;box-shadow:none;
+}
+:root[data-jewel-scene=christmas] #coleccion :is(.campaign-code,.recent-piece) {
+ background:var(--season-blush);color:var(--season-ink);border-color:#b36774;
+}
+:root[data-jewel-scene=christmas] :is(.custom-jewel,.three-invite,.fair-banner,.fair-section,.atelier-taller,.heart-story,.feature-board,.atelier-folds,.mix-section,.social-strip,.shopping-guide,.contact-table,.style-studio,.gift-campaign) {
+ background:var(--season-soft);color:var(--season-ink);border:0;border-radius:3px;box-shadow:none;
+}
+:root[data-jewel-scene=christmas] :is(.custom-jewel,.heart-story,.fair-section,.three-invite,.atelier-taller,.style-studio,.shopping-guide) :is(h2,h3,p,small,.text-link) {color:var(--season-ink)}
+:root[data-jewel-scene=christmas] .custom-jewel :is(.custom-main,.custom-figure,.custom-stage,.custom-quote,.custom-review,.custom-step-label) {
+ background:var(--season-cream);color:var(--season-ink);border-color:#b36774;border-radius:3px;box-shadow:none;
+}
+:root[data-jewel-scene=christmas] .custom-stage::before {background:none}
+:root[data-jewel-scene=christmas] .custom-jewel :is(input:not([type=checkbox]):not([type=radio]),select,textarea,.custom-piece-grid label) {
+ background:var(--season-blush);color:var(--season-ink);border-color:#aa5e6c;border-radius:3px;
+}
+:root[data-jewel-scene=christmas] .custom-piece-grid label:has(input:checked) {
+ background:#b86d7b;color:#35131e;border-color:var(--season-ink);
+}
+:root[data-jewel-scene=christmas] .custom-jewel :is(label,.custom-legend,.custom-kicker,.custom-material-note,.custom-reference,.custom-message,.custom-figure figcaption,.custom-figure figcaption strong,.custom-figure figcaption small) {color:var(--season-ink)}
+:root[data-jewel-scene=christmas] :is(.three-launch,.agenda-card,.atelier-fold,.diary-entry,.guide-accordion>details,.contact-links a,.contact-links button) {
+ background:var(--season-cream);color:var(--season-ink);border-color:#b36774;border-radius:3px;box-shadow:none;
+}
+:root[data-jewel-scene=christmas] .mobile-dock {background:var(--season-cream);border-color:#b36774;box-shadow:none}
+:root[data-jewel-scene=christmas] .mobile-dock :is(a,button,.ui-icon) {color:var(--season-ink)}
+:root[data-jewel-scene=christmas] :is(dialog,#cartDialog,.checkout-dialog) {
+ background:var(--season-cream);color:var(--season-ink);border-color:#a65c69;
+}
+:root[data-jewel-scene=christmas] #cartDialog :is(.cart-fixed-head,.cart-fixed-bottom,.cart-scroll),
+:root[data-jewel-scene=christmas] :is(.checkout-summary,.checkout-fields,.review-card,.payment-pending,.cart-delivery,.cart-benefit,.cart-undo,.coupon-box,#addressFields,.delivery-option,.compare-piece,.companion-primary,.welcome-dialog) {
+ background:var(--season-cream);color:var(--season-ink);border-color:#b36774;box-shadow:none;
+}
+:root[data-jewel-scene=christmas] #cartDialog :is(.cart-fixed-bottom,.cart-benefit,.cart-delivery-buttons button,.qty input,.qty button) {
+ background:var(--season-blush);color:var(--season-ink);border-color:#b36774;
+}
+:root[data-jewel-scene=christmas] #cartDialog :is(h2,h3,p,small,b,.text-link,.cart-line-total,.grand-total b,.cart-line-actions button,.cart-benefit .text-link,.cart-journey,.cart-price-note) {color:var(--season-ink)}
+:root[data-jewel-scene=christmas] dialog :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea) {
+ background:var(--season-blush);color:var(--season-ink);border-color:#b36774;
+}
+:root[data-jewel-scene=christmas] :is(.button:not(.secondary),.companion-primary,.three-launch),
+:root[data-jewel-scene=christmas] #cartDialog #checkout,
+:root[data-jewel-scene=christmas] #customJewelForm .button {
+ background:#4b1e2c;color:var(--season-blush);border:0;
+}
+:root[data-jewel-scene=christmas] .atelier-hero-actions>.button {
+ background:var(--season-blush);color:var(--season-ink);
+}
+:root[data-jewel-scene=christmas] :is(.secondary,.button.secondary,.companion-text,.back-to-top) {
+ background:var(--season-blush);color:var(--season-ink);border-color:#b36774;box-shadow:none;
+}
+:root[data-jewel-scene=christmas] footer {background:#4b1e2c;color:var(--season-blush)}
+:root[data-jewel-scene=christmas] footer :is(p,small,b,a,.text-link) {color:var(--season-blush)}
+:root[data-jewel-scene=christmas] footer .footer-place>a {background:#823a4a;color:var(--season-blush)}
+:root[data-jewel-scene=christmas] :is(button,a,input,select,textarea,summary):focus-visible {
+ outline-color:var(--season-ink);outline-offset:4px;
+}
+:root[data-jewel-scene=christmas] .atelier-intro :is(button,a):focus-visible,
+:root[data-jewel-scene=christmas] .appearance-bar button:focus-visible {outline-color:var(--season-blush)}
+@media(hover:hover) and (pointer:fine) {
+ :root[data-jewel-scene=christmas] .seasonal-edit-piece:hover img {transform:translateY(-3px)}
+ :root[data-jewel-scene=christmas] #products .quick-add:hover:not(:disabled) {background:#722d3b}
+ :root[data-jewel-scene=christmas] #coleccion .chips button:not(.active):hover {background:var(--season-soft)}
+}
+.seasonal-edit-piece img {transition:transform 180ms ease}
+@media(max-width:760px) {
+ :root[data-jewel-scene=christmas] main>.atelier-hero {padding-top:24px;padding-bottom:28px;gap:22px}
+ :root[data-jewel-scene=christmas] .atelier-hero h1 {font-size:clamp(46px,11.5vw,72px)}
+ :root[data-jewel-scene=christmas] .atelier-lead {font-size:15px}
+ :root[data-jewel-scene=christmas] .seasonal-edit:not([hidden]) {margin-top:22px;gap:12px}
+ .seasonal-edit-piece {gap:8px}
+ .seasonal-edit-piece img {width:54px;height:72px}
+ .seasonal-edit-piece strong {font-size:15px}
+ .seasonal-edit-piece>span>span {font-size:13px}
+ :root[data-jewel-scene=christmas] .atelier-hero .folio .atelier-portrait {height:clamp(260px,76vw,430px)}
+ :root[data-jewel-scene=christmas] #coleccion.shop-section {padding:22px 12px}
+ :root[data-jewel-scene=christmas] #coleccion .shop-title h2 {font-size:clamp(27px,7.2vw,34px)}
+ :root[data-jewel-scene=christmas] #products.product-grid:not(.list-mode) {gap:28px 12px}
+ :root[data-jewel-scene=christmas] #products .product-meta b {font-size:16px}
+}
+@media(prefers-reduced-motion:reduce) {
+ .seasonal-edit-piece img {transition:none}
+ :root[data-jewel-scene=christmas] .seasonal-edit-piece:hover img {transform:none}
+}
+:root[data-jewel-scene=christmas] #estudio-3d,
+:root[data-jewel-scene=christmas] #encuentranos,
+:root[data-jewel-scene=christmas] #nuestra-historia {
+ background:var(--season-soft);color:var(--season-ink);border:0;box-shadow:none;
+}
+:root[data-jewel-scene=christmas] #estudio-3d :is(h2,p,small),
+:root[data-jewel-scene=christmas] #encuentranos :is(h2,p,small),
+:root[data-jewel-scene=christmas] #nuestra-historia :is(h2,p,small) {color:var(--season-ink)}
+:root[data-jewel-scene=christmas] .custom-jewel #customJewelForm :is(input:not([type=checkbox]):not([type=radio]),select,textarea) {
+ background:var(--season-blush);color:var(--season-ink);border-color:#aa5e6c;border-radius:3px;
+}
+:root[data-jewel-scene=christmas] main>.atelier-hero {display:grid}
+:root[data-jewel-scene=christmas] #coleccion #gridView[aria-pressed=true],
+:root[data-jewel-scene=christmas] #coleccion #listView[aria-pressed=true] {
+ background:var(--season-pine);color:var(--season-blush);
+}
+:root[data-jewel-scene=christmas] #productDialog .detail-photo,
+:root[data-jewel-scene=christmas] #productDialog .detail-photo>span,
+:root[data-jewel-scene=christmas] #productDialog .detail-delivery {
+ background:var(--season-blush);color:var(--season-ink);border-color:#b36774;
+}
+:root[data-jewel-scene=christmas] #cartDialog #cartBottom,
+:root[data-jewel-scene=christmas] #cartDialog .qty {
+ background:var(--season-blush);color:var(--season-ink);border-color:#b36774;
+}
