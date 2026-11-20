@@ -222,3 +222,12 @@
  .christmas-snow i {animation:none}
  :root[data-jewel-scene=christmas] #products .product-view:hover img {transform:none}
 }
+.appearance-bar {width:min(1120px,calc(100% - 48px));margin-inline:auto}
+:root[data-jewel-scene=christmas] main>.atelier-hero {margin-inline:auto}
+:root[data-jewel-scene=christmas] .christmas-banner {margin:18px auto 0}
+:root[data-jewel-scene=christmas] #coleccion.shop-section {padding:32px}
+@media(max-width:760px) {
+ .appearance-bar {width:calc(100% - 32px)}
+ :root[data-jewel-scene=christmas] .christmas-banner {margin-top:6px}
+ :root[data-jewel-scene=christmas] #coleccion.shop-section {padding:20px 12px}
+}
