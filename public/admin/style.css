@@ -216,3 +216,5 @@ body[data-staff-panel=reset] > #staffResetGate {display:grid}
  body[data-staff-panel=open] .header-right .mode-pill {display:none}
  .header-right .session-exit {padding-inline:10px}
 }
+
+.staff-order-notice{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:16px 20px;margin-block:20px;border:1px solid #9db69b;border-radius:14px;background:#e2eddf;color:#293f2f}.staff-order-notice[hidden]{display:none}.staff-order-notice a{font-weight:700;color:inherit;min-height:44px;display:inline-flex;align-items:center}.mail-config{padding:12px 16px;border:1px solid #bacab3;border-radius:10px;background:#f0f3e9;line-height:1.6}.mail-delivery{padding:14px;border:1px solid #cad4c0;border-radius:12px;background:#f3f5ef;margin-block:16px}.mail-delivery p{font-size:13px;line-height:1.6}.mail-delivery button{min-height:44px;border-radius:10px;padding:10px 14px;background:#3d5641;color:#fff}

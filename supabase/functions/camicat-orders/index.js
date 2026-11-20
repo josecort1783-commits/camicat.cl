@@ -1,16 +1,15 @@
+import {createMailer} from './notifications.mjs';
 const origin = 'https://www.camicat.cl';
 const url = Deno.env.get('SUPABASE_URL');
 const secret = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 const mailKey = Deno.env.get('CAMICAT_RESEND_API_KEY');
 const mailFrom = Deno.env.get('CAMICAT_ORDER_FROM');
-const cors = {'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Headers':'authorization, apikey, content-type','Access-Control-Allow-Methods':'POST, OPTIONS','Cache-Control':'no-store','Referrer-Policy':'no-referrer','Vary':'Origin'};
+const cors = {'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Headers':'authorization, apikey, content-type','Access-Control-Allow-Methods':'GET, POST, OPTIONS','Cache-Control':'no-store','Referrer-Policy':'no-referrer','Vary':'Origin'};
 const response = (body,status=200) => new Response(JSON.stringify(body),{status,headers:{...cors,'Content-Type':'application/json'}});
 const clean = (value,max) => typeof value==='string' ? value.trim().replace(/\s+/gu,' ').slice(0,max) : '';
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const cap = /^[a-f0-9]{64}$/;
+const cap = /^(?:[a-f0-9]{64}|[0-9A-HJKMNP-TV-Z]{16})$/;
 const statuses = {recibido:'Solicitud recibida',cotizado:'Cotización preparada',confirmado:'Pedido confirmado',preparando:'En preparación',listo:'Listo para retirar',enviado:'Despachado',entregado:'Entregado',cancelado:'Cancelado'};
-const money = n => new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP'}).format(n);
-const html = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function hash(s) {return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s))),b=>b.toString(16).padStart(2,'0')).join('');}
 async function call(path,{method='GET',body,bearer=secret,prefer}={}) {
  const r=await fetch(url+path,{method,headers:{apikey:secret,Authorization:'Bearer '+bearer,'Content-Type':'application/json',...(prefer?{Prefer:prefer}:{})},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(7500)});
@@ -28,34 +27,16 @@ async function staff(req) {
  if(!/^Bearer [\w.-]{40,4096}$/.test(value)) return null;
  let user;
  try {user=await call('/auth/v1/user',{bearer:value.slice(7)});} catch {return null;}
- if(!user?.id||!user.email_confirmed_at||!['josecort1783@gmail.com','juanabulnes3@gmail.com'].includes(user.email?.toLowerCase())) return null;
+ if(!user?.id||!user.email_confirmed_at) return null;
  const [member]=await db('camicat_admin_members','?select=panel_label&user_id=eq.'+encodeURIComponent(user.id));
- return member?{id:user.id,label:member.panel_label,audit:user.email?.toLowerCase()==='josecort1783@gmail.com'}:null;
+ const [policy]=await db('camicat_order_staff_policy','?select=can_read_audit&email=eq.'+encodeURIComponent(user.email?.toLowerCase()||''));
+ return member&&policy?{id:user.id,label:member.panel_label,audit:policy.can_read_audit}:null;
 }
-async function sendInitial(order,token) {
- if(!mailKey||!mailFrom) return 'unconfigured';
- const filter='?id=eq.'+order.id;
- const claimed=await db('camicat_orders',filter+'&mail_status=eq.pending',{method:'PATCH',body:{mail_status:'sending'},prefer:'return=representation'});
- if(!claimed.length) return order.mail_status;
- const link=origin+'/pedidos.html#'+token;
- const items=order.items.map(p=>p.quantity+' × '+p.name).join(' · ');
- const summary=order.estimate!==null?'Subtotal referencial: '+money(order.estimate):'Una joya hecha a tu medida';
- const intro='Recibimos tu solicitud. El taller confirmará disponibilidad, precio final y entrega. No se ha realizado ningún cobro.';
- let state='failed';
- try {
-  const r=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:'Bearer '+mailKey,'Content-Type':'application/json','Idempotency-Key':'camicat-'+order.id},signal:AbortSignal.timeout(4200),body:JSON.stringify({
-   from:mailFrom,to:[order.customer_email],subject:'Recibimos tu solicitud '+order.public_number+' · Camicat',
-   text:'Hola, '+order.customer_name+'.\n\n'+intro+'\n\n'+order.public_number+'\n'+items+'\n'+summary+'\n\nSeguimiento: '+link,
-   html:'<div style="background:#eef0e9;padding:24px;color:#26382d;font:16px Arial,sans-serif"><div style="max-width:530px;margin:auto;background:#fff;padding:26px;border-radius:12px"><p style="letter-spacing:2px;color:#475e4a">CAMICAT · REQUÍNOA</p><h1>Recibimos tu solicitud</h1><p>Hola, '+html(order.customer_name)+'. '+intro+'</p><p><strong>'+html(order.public_number)+'</strong></p><p>'+html(items)+'</p><p>'+html(summary)+'</p><p><a href="'+link+'" style="display:inline-block;background:#314c39;color:white;padding:12px 17px;border-radius:6px">Ver seguimiento</a></p><p>Guarda este correo para volver a consultar el estado.</p></div></div>'
-  })});
-  state=r.ok?'sent':'failed';
- } catch { /* The receipt is already stored; never lose it if email fails. */ }
- try {await db('camicat_orders',filter,{method:'PATCH',body:{mail_status:state}});} catch { /* Report the delivery attempt accurately. */ }
- return state;
-}
+const mailer=createMailer({db,rpc,key:mailKey,from:mailFrom,origin,getOwnerRecipients:async()=>{const rows=await db('camicat_order_staff_policy','?select=email&notify_orders=eq.true');return rows.map(r=>r.email);}});
 Deno.serve(async req=>{
  if(req.headers.get('origin')!==origin) return response({error:'Origen no permitido.'},403);
  if(req.method==='OPTIONS')return new Response(null,{status:204,headers:cors});
+ if(req.method==='GET')return response({service:'camicat-orders',emailConfigured:mailer.configured});
  if(req.method!=='POST')return response({error:'Método no permitido.'},405);
  try{
   const reader=req.body?.getReader();if(!reader)return response({error:'Faltan los datos.'},400);
@@ -75,7 +56,7 @@ Deno.serve(async req=>{
    const payload={request_id:p.requestId,token_hash:await hash(p.token),rate_key:await hash(secret+'|'+addr),kind:p.kind,name,email,delivery:p.delivery,commune:p.delivery==='envio'?commune:'',region:p.delivery==='envio'?region:'',note,items:isCustom?[]:p.items};
    const o=await rpc('camicat_receive_request',payload);
    let emailStatus=o.mail_status;
-   if(emailStatus==='pending')try{emailStatus=await sendInitial(o,p.token);}catch{emailStatus='failed';}
+   try{emailStatus=await mailer.receive(o,p.token);}catch{emailStatus='failed';}
    return response({order:publicView(o),emailStatus});
   }
   if(p.action==='track'){
@@ -85,16 +66,32 @@ Deno.serve(async req=>{
    const events=await db('camicat_order_events','?select=status,detail,created_at&order_id=eq.'+o.id+'&order=created_at.asc&limit=50');
    return response({order:publicView(o),events});
   }
-  if(!['staff-list','staff-update','audit'].includes(p.action))return response({error:'Acción desconocida.'},400);
+  if(!['staff-list','staff-alerts','staff-retry-mail','staff-update','audit'].includes(p.action))return response({error:'Acción desconocida.'},400);
   const actor=await staff(req);
   if(!actor)return response({error:'Inicia sesión en el panel con una cuenta autorizada.'},401);
-  if(p.action==='staff-list') return response({actor,orders:await db('camicat_orders','?select='+staffFields+'&order=created_at.desc&limit=100')});
+  if(p.action==='staff-retry-mail') {
+   if(!uuid.test(p.id??''))return response({error:'Pedido inválido.'},400);
+   await mailer.dispatch(p.id);
+   return response({mailConfigured:mailer.configured,notifications:await mailer.summary([p.id])});
+  }
+  if(p.action==='staff-list'||p.action==='staff-alerts') {
+   const orders=await db('camicat_orders','?select='+staffFields+'&order=created_at.desc&limit=100');
+   if(mailer.configured) {
+    const pending=await db('camicat_order_notifications','?select=order_id&state=in.(pending,failed,sending)&order=created_at.asc&limit=12');
+    await Promise.all([...new Set(pending.map(x=>x.order_id))].slice(0,3).map(id=>mailer.dispatch(id).catch(()=>null)));
+   }
+   const notifications=await mailer.summary(orders.map(o=>o.id));
+   const needsResponse=orders.filter(o=>['recibido','cotizado'].includes(o.status)).length;
+   if(p.action==='staff-alerts')return response({needsResponse,mailConfigured:mailer.configured});
+   return response({actor,orders,notifications,needsResponse,mailConfigured:mailer.configured});
+  }
   if(p.action==='audit'){
    if(!actor.audit)return response({error:'Tu cuenta no tiene acceso a auditoría.'},403);
    return response({events:await db('camicat_audit','?select=occurred_at,actor_label,action,subject,detail&order=occurred_at.desc&limit=100')});
   }
   if(!uuid.test(p.id??'')||!Object.hasOwn(statuses,p.status)||p.status==='recibido'||(p.total!=null&&(!Number.isInteger(p.total)||p.total<0||p.total>99999999)))return response({error:'Revisa el estado y el total.'},400);
   const updated=await rpc('camicat_move_request',{id:p.id,actor:actor.id,status:p.status,total:p.total??null,detail:clean(p.detail,260),tracking:clean(p.tracking,120)});
+  try{await mailer.dispatch(updated.id);}catch{/* The panel can retry queued email. */}
   return response({order:Object.fromEntries(staffFields.split(',').map(k=>[k,updated[k]]))});
  }catch(e){
   const msg=e instanceof Error?e.message:'';
