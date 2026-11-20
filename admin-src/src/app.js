@@ -69,7 +69,8 @@ function read(key,fallback){try{const data=JSON.parse(localStorage.getItem(KEY+k
 function write(key,data){try{localStorage.setItem(KEY+key,JSON.stringify(data));return true;}catch{toast('No pudimos guardar en este dispositivo. Descarga una copia desde Conexión.');return false;}}
 let saved=read('-saved',BASE);if(!validCatalog(saved))saved=structuredClone(BASE);
 let draft=read('-draft',saved);if(!validCatalog(draft))draft=structuredClone(saved);
-let photoRequest=0;
+let photoRequest=0, sessionGeneration=0, signingOut=false;
+const logoutButtons=[$('#headerLogout'),$('#logout')];
 let mode='demo',revision=null,user=null,search='',filter='all',editingId=null,formImage='',photoBusy=false,busy=false,undoState=null,deleteId=null,toastTimer;
 function toast(text){const host=$('dialog[open]')||document.body;host.append($('#toast'));$('#toast').textContent=text;$('#toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),4500);}
 function open(id){$(id).showModal();}
@@ -80,6 +81,11 @@ function persistDraft(items){return mode==='cloud'?write('-cloud-'+user.id,{revi
 function stage(next,message){if(!validCatalog(next)){toast('Revisa los datos de los productos.');return false;}if(!persistDraft(next))return false;undoState=structuredClone(draft);draft=next;$('#undoText').textContent=message;$('#undoBar').hidden=false;render();return true;}
 function changed(id){return !sameProduct(saved.find(p=>p.id===id),draft.find(p=>p.id===id));}
 function render(){
+ $('#headerLogout').hidden=mode!=='cloud';
+ for(const button of logoutButtons){
+  button.disabled=busy||signingOut;
+  button.querySelector('span').textContent=signingOut?'Cerrando…':'Cerrar sesión';
+ }
  const count=dirty();$('.save-bar').classList.toggle('is-pending',count>0);$('#statTotal').textContent=draft.length;$('#statLow').textContent=draft.filter(p=>p.stock!==null&&p.stock>0&&p.stock<=3).length;$('#statZero').textContent=draft.filter(p=>p.stock===0).length;$('#productCount').textContent=draft.length;
  const shown=draft.filter(p=>(filter==='all'||filter==='low'&&p.stock!==null&&p.stock>0&&p.stock<=3||filter==='zero'&&p.stock===0||filter==='hidden'&&!p.visible||filter==='featured'&&isFeatured(p))&&p.name.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(search.normalize('NFD').replace(/[\u0300-\u036f]/g,'')));
  $('#products').innerHTML=shown.map(p=>`<article class="product-row ${changed(p.id)?'changed':''}" data-id="${esc(p.id)}"><div class="product-main"><img src="${p.image}" alt="${esc(p.name)}" width="55" height="72" loading="lazy"><div><h3>${esc(p.name)}</h3><p>${esc(p.category==='Otros'&&p.productType==='Anillos'?'Anillos':p.category)}</p>${isFeatured(p)?'<span class="featured-label">Destacado</span>':''}${changed(p.id)?'<span class="changed-label">Cambio pendiente</span>':''}</div></div><b class="product-price">${money(p.price)}</b><div class="row-stock">${p.stock===null?`<button class="unknown-stock" data-edit="${esc(p.id)}" aria-label="Definir stock de ${esc(p.name)}">Sin definir</button>`:`<div class="stock-control ${p.stock===0?'zero':p.stock<=3?'low':''}"><button data-stock="${esc(p.id)}" data-step="-1" ${p.stock===0?'disabled':''} aria-label="Restar una unidad de ${esc(p.name)}">−</button><b>${p.stock}</b><button data-stock="${esc(p.id)}" data-step="1" ${p.stock>=99999?'disabled':''} aria-label="Sumar una unidad de ${esc(p.name)}">+</button></div>`}</div><div class="row-status"><span class="status-pill ${!p.visible?'off':p.stock===0||!p.available?'sold':''}">${productState(p)}</span></div><div class="row-actions"><button class="edit-button" data-edit="${esc(p.id)}" aria-label="Editar ${esc(p.name)}">Editar</button><details class="row-more"><summary aria-label="Más opciones de ${esc(p.name)}">⋯</summary><div class="row-menu"><button data-visibility="${esc(p.id)}">${p.visible?'Ocultar de la tienda':'Mostrar en la tienda'}</button><button class="delete-action" data-delete="${esc(p.id)}">Eliminar producto</button></div></details></div></article>`).join('');
@@ -154,12 +160,49 @@ $('#publish').onclick=()=>{
  $('#confirmPublish').textContent=mode==='cloud'?'Actualizar tienda':'Actualizar prueba';
  open('#reviewChanges');
 };
-$('#confirmPublish').onclick=async()=>{if(busy||!dirty()||!$('#reviewChanges').open)return;$('#reviewChanges').close();busy=true;render();try{if(mode==='cloud'){const result=await publishCatalog(structuredClone(draft),revision);saved=result.products;draft=structuredClone(saved);revision=result.revision;$('#lastUpdated').textContent='Actualizado '+new Date(result.updated_at).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});write('-cloud-'+user.id,null);}else{if(!write('-saved',draft))return;saved=structuredClone(draft);$('#lastUpdated').textContent='Prueba actualizada hoy';}if(mode==='demo')write('-draft',draft);undoState=null;$('#undoBar').hidden=true;toast(mode==='cloud'?'Listo. Tu tienda quedó actualizada.':'Prueba actualizada. La tienda pública no cambió.');}catch(error){toast(error.message);}finally{busy=false;render();}};
+$('#confirmPublish').onclick=async()=>{if(busy||!dirty()||!$('#reviewChanges').open)return;$('#reviewChanges').close();busy=true;render();try{if(mode==='cloud'){const actor=user.id,generation=sessionGeneration;const result=await publishCatalog(structuredClone(draft),revision);if(generation!==sessionGeneration)return;saved=result.products;draft=structuredClone(saved);revision=result.revision;$('#lastUpdated').textContent='Actualizado '+new Date(result.updated_at).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});write('-cloud-'+actor,null);}else{if(!write('-saved',draft))return;saved=structuredClone(draft);$('#lastUpdated').textContent='Prueba actualizada hoy';}if(mode==='demo')write('-draft',draft);undoState=null;$('#undoBar').hidden=true;toast(mode==='cloud'?'Listo. Tu tienda quedó actualizada.':'Prueba actualizada. La tienda pública no cambió.');}catch(error){toast(error.message);}finally{busy=false;render();}};
 $('#helpOpen').onclick=$('#helpOpenBottom').onclick=()=>open('#helpDialog');$('#mobileConnection').onclick=$('#connectionOpen').onclick=$('#trialConnect').onclick=()=>open('#connectionDialog');
-async function enterCloud(access,loaded=null){if(!access)throw Error('Entra de nuevo para cargar tu tienda.');if(staffOnly&&!await security.requireVerified())throw Error('Verifica el código de tu aplicación para entrar.');const current=loaded??await loadCatalog();user=access;mode='cloud';if(staffOnly)document.body.dataset.staffPanel='open';agenda.connect(true);orders.connect(access);security.connect(true);const checkpoint=read('-cloud-'+user.id,null);revision=checkpoint&&validCatalog(checkpoint.products)?checkpoint.revision:current.revision;saved=current.products;draft=checkpoint&&validCatalog(checkpoint.products)?checkpoint.products:structuredClone(saved);if(checkpoint&&checkpoint.revision!==current.revision)toast('Hay cambios de otro dispositivo. Conservamos tu copia: revisa Conexión antes de actualizar.');undoState=null;$('#undoBar').hidden=true;$('#lastUpdated').textContent='Actualizado '+new Date(current.updated_at).toLocaleDateString('es-CL');$('#loginForm').hidden=true;$('#staffRecoveryForm').hidden=true;$('#staffLoginHint').hidden=true;$('#connectedPanel').hidden=false;$('#connectedEmail').textContent=user.panelLabel||('Acceso de '+user.email);if(staffOnly)$('#staffPasswordForm').hidden=false;render();}
+async function enterCloud(access,loaded=null){if(!access)throw Error('Entra de nuevo para cargar tu tienda.');const generation=sessionGeneration;if(staffOnly&&!await security.requireVerified())throw Error('Verifica el código de tu aplicación para entrar.');const current=loaded??await loadCatalog();if(generation!==sessionGeneration)throw Error('Tu sesión terminó. Vuelve a entrar.');user=access;mode='cloud';if(staffOnly)document.body.dataset.staffPanel='open';agenda.connect(true);orders.connect(access);security.connect(true);const checkpoint=read('-cloud-'+user.id,null);revision=checkpoint&&validCatalog(checkpoint.products)?checkpoint.revision:current.revision;saved=current.products;draft=checkpoint&&validCatalog(checkpoint.products)?checkpoint.products:structuredClone(saved);if(checkpoint&&checkpoint.revision!==current.revision)toast('Hay cambios de otro dispositivo. Conservamos tu copia: revisa Conexión antes de actualizar.');undoState=null;$('#undoBar').hidden=true;$('#lastUpdated').textContent='Actualizado '+new Date(current.updated_at).toLocaleDateString('es-CL');$('#loginForm').hidden=true;$('#staffRecoveryForm').hidden=true;$('#staffLoginHint').hidden=true;$('#connectedPanel').hidden=false;$('#connectedEmail').textContent=user.panelLabel||('Acceso de '+user.email);if(staffOnly)$('#staffPasswordForm').hidden=false;render();}
 $('#loginForm').onsubmit=async e=>{e.preventDefault();$('#loginButton').disabled=true;$('#loginError').hidden=true;try{const {error}=await client.auth.signInWithPassword({email:$('#loginEmail').value.trim(),password:$('#loginPassword').value});if(error)throw Error('No pudimos entrar. Revisa tu correo y contraseña, o solicita habilitar tu acceso.');const access=await checkAccess();if(!access)throw Error('No pudimos verificar tu acceso.');if(!staffOnly&&dirty()&&!confirm('Para entrar se cargará el catálogo en línea. ¿Dejar los cambios de prueba guardados en este dispositivo?')){await client.auth.signOut();return;}await enterCloud(access);$('#loginPassword').value='';$('#connectionDialog').close();toast('Ya estás en tu tienda en línea.');}catch(error){$('#loginError').textContent=error.message;$('#loginError').hidden=false;}finally{$('#loginButton').disabled=false;}};
-$('#reloadCloud').onclick=async()=>{if(dirty()&&!confirm('Hay cambios sin actualizar. ¿Descartarlos y traer el catálogo en línea?'))return;try{const access=await checkAccess();if(!access)throw Error('Tu sesión terminó. Entra de nuevo.');const current=await loadCatalog();if(!write('-cloud-'+access.id,null))return;await enterCloud(access,current);toast('Catálogo actualizado desde la tienda.');}catch(error){toast(error.message);}};
-$('#logout').onclick=async()=>{if(dirty()&&!confirm('Hay cambios sin actualizar. ¿Cerrar tu acceso y volver a la prueba?'))return;await client.auth.signOut();user=null;mode='demo';if(staffOnly){document.body.dataset.staffPanel='locked';$('#connectionDialog').close();}agenda.connect(false);orders.connect(null);security.connect(false);revision=null;saved=read('-saved',BASE);if(!validCatalog(saved))saved=structuredClone(BASE);draft=read('-draft',saved);if(!validCatalog(draft))draft=structuredClone(saved);$('#loginForm').hidden=false;$('#connectedPanel').hidden=true;$('#loginPassword').value='';$('#lastUpdated').textContent='Catálogo de prueba';render();toast('Acceso en línea cerrado.');};
+$('#reloadCloud').onclick=async()=>{if(dirty()&&!confirm('Hay cambios sin actualizar. ¿Descartarlos y traer el catálogo en línea?'))return;try{const generation=sessionGeneration;const access=await checkAccess();if(!access)throw Error('Tu sesión terminó. Entra de nuevo.');const current=await loadCatalog();if(generation!==sessionGeneration)return;if(!write('-cloud-'+access.id,null))return;await enterCloud(access,current);toast('Catálogo actualizado desde la tienda.');}catch(error){toast(error.message);}};
+function leaveCloud(){
+ sessionGeneration++;
+ if(mode!=='cloud')return;
+ user=null;mode='demo';revision=null;undoState=null;
+ if(staffOnly){
+  document.body.dataset.staffPanel='locked';
+  $$('dialog[open]').forEach(dialog=>dialog.close());
+ }
+ agenda.connect(false);orders.connect(null);security.connect(false);
+ saved=read('-saved',BASE);if(!validCatalog(saved))saved=structuredClone(BASE);
+ draft=read('-draft',saved);if(!validCatalog(draft))draft=structuredClone(saved);
+ $('#undoBar').hidden=true;
+ $('#loginForm').hidden=false;
+ $('#staffLoginHint').hidden=false;
+ $('#loginError').hidden=true;
+ $('#connectedPanel').hidden=true;
+ $('#connectedEmail').textContent='';
+ $('#staffPasswordForm').reset();
+ $('#staffPasswordForm').hidden=true;
+ $('#staffPasswordStatus').textContent='';
+ $('#loginPassword').value='';
+ $('#lastUpdated').textContent='Catálogo de prueba';
+ render();
+ if(staffOnly)$('#staffLogin').focus();
+}
+async function closeSession(){
+ if(mode!=='cloud'||busy||signingOut)return;
+ if(dirty()&&!confirm('Tienes cambios sin publicar. Quedarán como borrador en este dispositivo. ¿Cerrar sesión?'))return;
+ signingOut=true;render();
+ try{
+  const {error}=await client.auth.signOut({scope:'local'})??{};
+  if(error)throw error;
+  if(mode==='cloud')leaveCloud();
+  toast('Sesión cerrada.');
+ }catch{toast('No pudimos cerrar sesión. Vuelve a intentarlo.');}
+ finally{signingOut=false;render();}
+}
+for(const button of logoutButtons)button.onclick=closeSession;
 $('#exportBackup').onclick=()=>{const blob=new Blob([JSON.stringify({version:1,exported_at:new Date().toISOString(),products:draft},null,2)],{type:'application/json'});const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='camicat-catalogo-respaldo.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 $('#resetDemo').onclick=()=>{if(mode!=='demo'){toast('Esta opción es solo para la prueba.');return;}if(!confirm('¿Restaurar la prueba con las ocho piezas iniciales? La tienda pública no cambiará.'))return;saved=structuredClone(BASE);draft=structuredClone(BASE);write('-saved',saved);write('-draft',draft);undoState=null;$('#undoBar').hidden=true;render();toast('Prueba restaurada.');};
 render();
@@ -169,4 +212,4 @@ if(freshLogin){
  $('#staffLogin').click();
 }else if(!resetting)checkAccess().then(async access=>{if(access&&(staffOnly||!dirty()))await enterCloud(access);}).catch(()=>{});
 
-if(staffOnly&&typeof client.auth.onAuthStateChange==='function')client.auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT'&&!resetting){document.body.dataset.staffPanel='locked';}});
+if(staffOnly&&typeof client.auth.onAuthStateChange==='function')client.auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT'&&!resetting)leaveCloud();});

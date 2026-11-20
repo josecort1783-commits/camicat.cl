@@ -1,7 +1,7 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');const {readFileSync}=require('node:fs');const {JSDOM}=require('jsdom');const {build}=require('esbuild');
 let bundle;
 async function setup(storage={},cloud=null,staffOnly=false,url='https://admin.example'){
- if(!bundle){bundle=(await build({entryPoints:['src/app.js'],bundle:true,write:false,format:'iife',plugins:[{name:'cloud-mock',setup(b){b.onResolve({filter:/^\.\/cloud\.js$/},()=>({path:'cloud',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:`export const client={auth:{signOut:async()=>{},signInWithPassword:async()=>({error:new Error('no login')})}};export function createRecoveryClient(){return {auth:{setSession:async(tokens)=>{globalThis.__recoveryTokens=tokens;return globalThis.__testCloud?.recovery??{error:new Error('expired')}},mfa:{getAuthenticatorAssuranceLevel:async()=>({data:{nextLevel:'aal1',currentLevel:'aal1'}})},updateUser:async({password})=>{globalThis.__passwordUpdated=!!password;return {error:null}},signOut:async()=>{globalThis.__recoverySignedOut=true}}}};export async function checkAccess(){return globalThis.__testCloud?.access??null}export async function loadCatalog(){if(globalThis.__testCloud)return globalThis.__testCloud.current;throw Error('offline')}export async function publishCatalog(items,revision){if(globalThis.__testCloud)return globalThis.__testCloud.publish(items,revision);throw Error('offline')}`}));}}]})).outputFiles[0].text;}
+ if(!bundle){bundle=(await build({entryPoints:['src/app.js'],bundle:true,write:false,format:'iife',plugins:[{name:'cloud-mock',setup(b){b.onResolve({filter:/^\.\/cloud\.js$/},()=>({path:'cloud',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:`export const client={auth:{signOut:async options=>{globalThis.__signOutOptions=options;return globalThis.__testCloud?.signOut?.()},signInWithPassword:async()=>({error:new Error('no login')})}};export function createRecoveryClient(){return {auth:{setSession:async(tokens)=>{globalThis.__recoveryTokens=tokens;return globalThis.__testCloud?.recovery??{error:new Error('expired')}},mfa:{getAuthenticatorAssuranceLevel:async()=>({data:{nextLevel:'aal1',currentLevel:'aal1'}})},updateUser:async({password})=>{globalThis.__passwordUpdated=!!password;return {error:null}},signOut:async()=>{globalThis.__recoverySignedOut=true}}}};export async function checkAccess(){return globalThis.__testCloud?.access??null}export async function loadCatalog(){if(globalThis.__testCloud)return globalThis.__testCloud.current;throw Error('offline')}export async function publishCatalog(items,revision){if(globalThis.__testCloud)return globalThis.__testCloud.publish(items,revision);throw Error('offline')}`}));}}]})).outputFiles[0].text;}
  const dom=new JSDOM((staffOnly?readFileSync('src/index.html','utf8'):readFileSync('src/index.html','utf8').replace(' data-staff-panel="locked"','')),{url,runScripts:'outside-only'}),w=dom.window;w.structuredClone=structuredClone;w.crypto.randomUUID=undefined;w.confirm=()=>true;w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};w.createImageBitmap=async()=>({width:10,height:10,close(){}});w.HTMLCanvasElement.prototype.getContext=()=>({drawImage(){}});w.HTMLCanvasElement.prototype.toDataURL=()=> 'data:image/webp;base64,UklGRg==';for(const [k,v]of Object.entries(storage))w.localStorage.setItem(k,v);if(cloud)w.__testCloud=cloud;w.fetch=async(path,options)=>{w.__resetRequest={path,email:JSON.parse(options.body).email};const error=w.__resetError;return {ok:!error,status:error?.status??200,json:async()=>({code:error?.code})};};w.eval(bundle);if(cloud)await new Promise(setImmediate);return {dom,w,$:s=>w.document.querySelector(s)};
 }
 test('edit stock, filter, undo, update demo and restore in another load',async()=>{const b=await setup(),{$,w}=b;assert.equal(w.document.querySelectorAll('.product-row').length,8);assert.equal($('#publish').disabled,true);$('[data-edit="flor-dorada"].edit-button').click();$('#stockUnknown').checked=false;$('#stockUnknown').dispatchEvent(new w.Event('change'));$('#productStock').value='3';$('#productPrice').value='16990';$('#productForm').dispatchEvent(new w.Event('submit',{cancelable:true}));assert.equal($('#statLow').textContent,'1');assert.equal($('#publish').disabled,false);assert.match($('[data-id="flor-dorada"] .product-price').textContent,/16.990/);$('[data-filter="low"]').click();assert.equal(w.document.querySelectorAll('.product-row').length,1);$('[data-stock="flor-dorada"][data-step="-1"]').click();assert.equal($('[data-id="flor-dorada"] .stock-control b').textContent,'2');$('#undo').click();assert.equal($('[data-id="flor-dorada"] .stock-control b').textContent,'3');$('#publish').click();assert.match($('#reviewList').textContent,/Stock: Sin definir → 3 unidades/);assert.match($('#reviewList').textContent,/Precio:.*16.990/);$('#confirmPublish').click();assert.equal($('#publish').disabled,true);const storage=Object.fromEntries(Object.keys(w.localStorage).map(k=>[k,w.localStorage.getItem(k)]));const restored=await setup(storage);assert.equal(restored.$('[data-id="flor-dorada"] .stock-control b').textContent,'3');restored.dom.window.close();b.dom.window.close();});
@@ -112,6 +112,7 @@ test('category first, suggested names are optional and anillos save in compatibl
 test('unified admin stays locked until device session and membership are verified',async()=>{
  const anon=await setup({},null,true),{$,w}=anon;
  assert.equal(w.document.body.dataset.staffPanel,'locked');
+ assert.equal($('#headerLogout').hidden,true);
  $('#staffLogin').click();
  assert.equal($('#connectionDialog').open,true);
  assert.equal($('#loginForm').hidden,false);
@@ -122,9 +123,38 @@ test('unified admin stays locked until device session and membership are verifie
  const member=await setup({}, {access:{id:'test-member',panelLabel:'Prueba · Administrador'},current:{products,revision:1,updated_at:'2026-11-05T12:00:00Z'}},true);
  assert.equal(member.w.document.body.dataset.staffPanel,'open');
  assert.equal(member.$('#connectedEmail').textContent,'Prueba · Administrador');
- await member.$('#logout').onclick();
+ assert.equal(member.$('#headerLogout').hidden,false);
+ assert.equal(member.$('#headerLogout').textContent,'Cerrar sesión');
+ await member.$('#headerLogout').onclick();
+ assert.equal(member.w.__signOutOptions.scope,'local');
  assert.equal(member.w.document.body.dataset.staffPanel,'locked');
+ assert.equal(member.$('#headerLogout').hidden,true);
+ assert.equal(member.w.document.activeElement.id,'staffLogin');
  member.dom.window.close();
+});
+
+test('sign-out protects a draft and keeps the panel open on a service error',async()=>{
+ const model=await import('../src/model.js');
+ const products=model.normalizeSeed(JSON.parse(readFileSync('src/seed.json','utf8')));
+ const changed=structuredClone(products);
+ changed[0].price+=100;
+ let attempts=0;
+ const b=await setup({'camicat-admin-v1-cloud-test-member':JSON.stringify({revision:1,products:changed})},{
+  access:{id:'test-member'},current:{products,revision:1,updated_at:'2026-11-05T12:00:00Z'},
+  async signOut(){attempts++;return {error:attempts===1?new Error('offline'):null};}
+ },true);
+ const {$,w}=b;
+ w.confirm=()=>false;
+ await $('#headerLogout').onclick();
+ assert.equal(attempts,0);
+ w.confirm=()=>true;
+ await $('#headerLogout').onclick();
+ assert.equal(w.document.body.dataset.staffPanel,'open');
+ assert.match($('#toast').textContent,/No pudimos cerrar sesión/);
+ await $('#headerLogout').onclick();
+ assert.equal(w.document.body.dataset.staffPanel,'locked');
+ assert.equal(JSON.parse(w.localStorage.getItem('camicat-admin-v1-cloud-test-member')).products[0].price,changed[0].price);
+ b.dom.window.close();
 });
 
 test('staff password reset requires a valid email and returns to the panel',async()=>{
