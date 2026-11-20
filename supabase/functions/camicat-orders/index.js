@@ -98,7 +98,7 @@ Deno.serve(async req=>{
   return response({order:Object.fromEntries(staffFields.split(',').map(k=>[k,updated[k]]))});
  }catch(e){
   const msg=e instanceof Error?e.message:'';
-  const errors={camicat_unavailable:'Una pieza ya no está disponible. Revisa tu selección.',camicat_invalid_items:'No se pudo confirmar la selección.',camicat_rate_limit:'Llegaste al límite temporal de solicitudes. Intenta más tarde.',camicat_need_total:'Agrega el total final y las condiciones de entrega.',camicat_need_pickup:'Indica el lugar y horario de retiro.',camicat_need_tracking:'Indica el transportista y el número de seguimiento.',camicat_invalid_transition:'El estado cambió en otro dispositivo. Actualiza la bandeja.',camicat_order_missing:'No encontramos el pedido.'};
+  const errors={camicat_unavailable:'Una pieza ya no está disponible. Revisa tu selección.',camicat_invalid_items:'No se pudo confirmar la selección.',camicat_rate_limit:'Llegaste al límite temporal de solicitudes. Intenta más tarde.',camicat_need_total:'Agrega el total final y las condiciones de entrega.',camicat_need_pickup:'Indica el lugar y horario de retiro.',camicat_need_tracking:'Indica el transportista y el número de seguimiento.',camicat_invalid_transition:'El estado cambió en otro dispositivo. Actualiza la bandeja.',camicat_order_missing:'No encontramos el pedido.',camicat_payment_locked:'Consulta el estado en Webpay antes de modificar este pedido.',camicat_payment_required:'Espera la confirmación de Webpay antes de preparar este pedido.'};
   return response({error:errors[msg]??'No se pudo completar la solicitud. Intenta de nuevo.'},msg==='camicat_rate_limit'?429:errors[msg]?409:503);
  }
 });

@@ -64,3 +64,10 @@
  header .header-actions>#cartOpen{font-size:11px;padding-inline:5px}
  header .header-actions>.two-page-link,header .header-actions>.order-store-link,header .header-actions>.staff-header-link{font-size:11px}
 }
+
+.order-payment-panel{margin:16px 0;padding:16px;border:1px solid #c9d3c5;border-radius:10px;background:#f2f5ed;color:#243b2c}
+.order-payment-panel form{display:grid;gap:10px;margin-top:10px}
+.order-payment-panel form[hidden],#payment-test[hidden]{display:none}
+.order-payment-panel button{min-height:44px}
+.order-payment-panel h3{margin-top:0}
+#payment-test{font-weight:700}
