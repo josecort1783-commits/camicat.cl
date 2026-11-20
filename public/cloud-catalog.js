@@ -20,6 +20,7 @@
     for(const id of Object.keys(cart)){const p=byId.get(id);if(!p)delete cart[id];else if(quantityLimit(p)>0)cart[id]=Math.min(cart[id],quantityLimit(p));}
     if(previous!==JSON.stringify(cart))write('-cart',cart);
     renderProducts();renderCart();renderHighlights();syncAtelierCatalog();
+    if(typeof renderSeasonalEdit==='function')renderSeasonalEdit();
     if(previous!==JSON.stringify(cart))$('#cartLiveStatus').textContent='Actualizamos tu selección según la disponibilidad del catálogo.';
     loadedRevision=row.revision;
     document.documentElement.dataset.catalogSource='supabase';
