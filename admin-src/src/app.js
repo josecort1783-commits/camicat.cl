@@ -1,3 +1,4 @@
+import {showPasswordReset} from './reset-view.js';
 import {recoveryRequest,recoveryMessage} from './recovery.js';
 import {createStaffSecurity} from './security.js';
 import {createOrders} from './orders.js';
@@ -10,8 +11,8 @@ const agenda=createAgenda(client);
 const orders=createOrders(client);
 const security=createStaffSecurity(client);
 const staffOnly=document.body.hasAttribute('data-staff-panel');
-const staffAuthType=staffOnly?new URLSearchParams(location.hash.slice(1)).get('type'):null;
-let staffSetup=['invite','recovery'].includes(staffAuthType);
+const resetting=staffOnly&&showPasswordReset();
+const freshLogin=staffOnly&&new URLSearchParams(location.search).get('restablecida')==='1';
 if(staffOnly){
  $('#staffLogin').disabled=false;
  const setStaffView=(recovery,focus=true)=>{
@@ -47,9 +48,6 @@ if(staffOnly){
    status.textContent=recoveryMessage(error);
   }finally{button.disabled=false;}
  };
- if(typeof client.auth.onAuthStateChange==='function')client.auth.onAuthStateChange(event=>{
-  if(event==='PASSWORD_RECOVERY')staffSetup=true;
- });
  $('#staffPasswordForm').onsubmit=async e=>{
   e.preventDefault();
   const button=e.currentTarget.querySelector('button');
@@ -62,7 +60,6 @@ if(staffOnly){
    if(error)throw error;
    input.value='';repeat.value='';
    status.textContent='Contraseña actualizada. Ya puedes entrar con ella.';
-   if(staffSetup){staffSetup=false;$('#connectionTitle').textContent='Tu cuenta';}
   }catch{status.textContent='No pudimos cambiar tu contraseña. Comprueba que tu sesión siga abierta.';}
   finally{button.disabled=false;}
  };
@@ -167,6 +164,9 @@ $('#exportBackup').onclick=()=>{const blob=new Blob([JSON.stringify({version:1,e
 $('#resetDemo').onclick=()=>{if(mode!=='demo'){toast('Esta opción es solo para la prueba.');return;}if(!confirm('¿Restaurar la prueba con las ocho piezas iniciales? La tienda pública no cambiará.'))return;saved=structuredClone(BASE);draft=structuredClone(BASE);write('-saved',saved);write('-draft',draft);undoState=null;$('#undoBar').hidden=true;render();toast('Prueba restaurada.');};
 render();
 // A stored session is checked by the server and membership policy, not trusted as authorization.
-checkAccess().then(async access=>{if(access&&(staffOnly||!dirty())){await enterCloud(access);if(staffSetup){$('#connectionTitle').textContent='Define tu contraseña';open('#connectionDialog');$('#staffPassword').focus();}}}).catch(()=>{});
+if(freshLogin){
+ history.replaceState(null,'','/admin');
+ $('#staffLogin').click();
+}else if(!resetting)checkAccess().then(async access=>{if(access&&(staffOnly||!dirty()))await enterCloud(access);}).catch(()=>{});
 
-if(staffOnly&&typeof client.auth.onAuthStateChange==='function')client.auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT'){document.body.dataset.staffPanel='locked';}});
+if(staffOnly&&typeof client.auth.onAuthStateChange==='function')client.auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT'&&!resetting){document.body.dataset.staffPanel='locked';}});
