@@ -2,7 +2,7 @@ export function createOrders(client){
  const A=window.CamicatOrders;
  if(!A)return {connect(){}};
  const $=x=>document.getElementById(x),{node}=A;
- let access=null,filter='pending',rows=[],generation=0;
+ let paymentConfig=null,access=null,filter='pending',rows=[],generation=0;
  const stages={recibido:['cotizado','confirmado','cancelado'],cotizado:['confirmado','cancelado'],confirmado:['preparando','cancelado'],preparando:['listo','enviado','cancelado'],listo:['entregado','enviado','cancelado'],enviado:['entregado']};
  async function run(action,p){
   const {data}=await client.auth.getSession();
@@ -15,11 +15,64 @@ export function createOrders(client){
   $('staffOrdersList').replaceChildren(...shown.map(card));
   if(!shown.length)$('staffOrdersList').append(node('p','No hay solicitudes en esta vista.'));
  }
+ function paymentControls(o){
+  const box=node('section'),status=node('p'),refresh=node('button','Consultar pago');
+  box.className='order-payment-panel';
+  status.setAttribute('role','status');
+  refresh.type='button';
+  box.append(node('h3',paymentConfig.mode==='integration'?'Webpay · Prueba':'Webpay'),status,refresh);
+  const prepare=node('form');
+  prepare.hidden=true;
+  const delivery=node('select'),shipping=node('input'),detail=node('textarea'),checkbox=node('input'),send=node('button','Habilitar pago al cliente');
+  for(const [value,text] of [['','Selecciona entrega'],['retiro','Retiro'],['envio','Despacho']]){
+   const option=node('option',text);option.value=value;delivery.append(option);
+  }
+  delivery.required=true;delivery.value=o.delivery==='por_definir'?'':o.delivery;
+  shipping.type='number';shipping.min='0';shipping.max=String(o.total??0);shipping.step='1';shipping.required=true;
+  detail.required=true;detail.minLength=5;detail.maxLength=260;detail.value=o.next_step??'';
+  checkbox.type='checkbox';checkbox.required=true;send.type='submit';
+  const shippingLabel=label('Costo de despacho incluido en el total',shipping);
+  const sync=()=>{shippingLabel.hidden=delivery.value==='retiro';if(shippingLabel.hidden)shipping.value='0';};
+  delivery.onchange=sync;sync();
+  prepare.append(node('p','Total confirmado: '+A.money(o.total??0)),label('Entrega acordada',delivery),shippingLabel,
+   label('Lugar, instrucciones o plazo acordado',detail),label('Confirmé y aparté las piezas, y verifiqué los precios y la entrega.',checkbox),send);
+  box.append(prepare);
+  const pay=async(action,fields={})=>{
+   const {data}=await client.auth.getSession();
+   if(!data.session?.access_token)throw Error('Vuelve a iniciar sesión.');
+   return A.payment(action,{orderId:o.id,...fields},data.session.access_token);
+  };
+  refresh.onclick=async()=>{
+   refresh.disabled=true;
+   status.textContent='Consultando Webpay…';
+   try{
+    const info=await pay('staff-status');
+    status.textContent=A.paymentStates[info.state]||'Pago en verificación';
+    prepare.hidden=o.status!=='confirmado'||!['unavailable','ready','failed','cancelled'].includes(info.state);
+    if(info.quote){
+     delivery.value=info.quote.delivery;shipping.value=info.quote.shipping;detail.value=info.quote.detail;sync();
+    }
+   }catch(e){status.textContent=e.message;}
+   finally{refresh.disabled=false;}
+  };
+  prepare.onsubmit=async e=>{
+   e.preventDefault();send.disabled=true;
+   try{
+    await pay('staff-enable',{amount:o.total,delivery:delivery.value,shipping:delivery.value==='retiro'?0:Number(shipping.value),
+     detail:detail.value,stockConfirmed:checkbox.checked});
+    status.textContent='El cliente ya puede pagar desde su enlace privado de seguimiento.';
+    prepare.hidden=true;checkbox.checked=false;
+   }catch(e){status.textContent=e.message;}
+   finally{send.disabled=false;}
+  };
+  return box;
+ }
  function card(o){
   const item=node('details'),dl=node('dl');item.className='order-item';
   item.append(node('summary',o.public_number+' · '+(A.states[o.status]||o.status)),dl);
   const pairs=[['Tipo',o.kind==='catalogo'?'Catálogo':'Joya personalizada'],['Cliente',o.customer_name],['Correo',o.customer_email],['Recibido',A.date(o.created_at)],['Entrega',o.delivery==='retiro'?'Retiro en Requínoa':o.delivery==='envio'?[o.commune,o.region].filter(Boolean).join(', '):'Por definir'],['Selección',o.items.map(x=>x.quantity+' × '+x.name).join(' · ')],['Solicitud',o.note],['Subtotal referencial',o.estimate===null?'':A.money(o.estimate)],['Total acordado',o.total===null?'':A.money(o.total)],['Correo',o.mail_status==='sent'?'Enviado':o.mail_status==='failed'?'Falló el envío':'No confirmado'],['Último aviso',o.next_step],['Seguimiento',o.tracking]];
   for(const [k,v] of pairs)if(v)dl.append(node('dt',k),node('dd',v));
+  if(paymentConfig?.enabled&&A.payment&&o.total>0&&['confirmado','preparando','listo','enviado','entregado'].includes(o.status))item.append(paymentControls(o));
   if(!stages[o.status])return item;
   const f=node('form'),s=node('select'),amount=node('input'),detail=node('textarea'),tracking=node('input'),save=node('button','Guardar estado'),status=node('p');
   save.type='submit';status.setAttribute('role','status');s.required=true;
@@ -38,7 +91,7 @@ export function createOrders(client){
   return item;
  }
  async function load(){if(!access)return;const v=++generation;$('staffOrdersStatus').textContent='Cargando solicitudes…';
-  try{const d=await run('staff-list');if(v!==generation)return;rows=d.orders;render();$('staffOrdersStatus').textContent=rows.length?rows.length+' solicitudes recientes.':'Todavía no hay solicitudes.';$('staffAuditNav').hidden=!d.actor.audit;$('staffAudit').hidden=!d.actor.audit;}
+  try{const [d,config]=await Promise.all([run('staff-list'),A.payment?.().catch(()=>null)]);if(v!==generation)return;paymentConfig=config;rows=d.orders;render();$('staffOrdersStatus').textContent=rows.length?rows.length+' solicitudes recientes.':'Todavía no hay solicitudes.';$('staffAuditNav').hidden=!d.actor.audit;$('staffAudit').hidden=!d.actor.audit;}
   catch(e){if(v===generation)$('staffOrdersStatus').textContent=e.message;}
  }
  async function audit(){if(!access)return;const v=generation;$('staffAuditStatus').textContent='Cargando movimientos…';

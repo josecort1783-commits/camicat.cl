@@ -23,4 +23,4 @@ Para confirmar solicitudes por correo, configurar en **Supabase Edge Functions �
 
 El correo de la solicitud y los correos de acceso son flujos separados. Recuperación e invitaciones del panel usan **Supabase Auth → Emails → SMTP**. Probar el remitente real en ambos flujos antes de prometer entrega por correo. Si falla la confirmación de solicitud, el registro queda disponible y se muestra el enlace privado para copiarlo. Los cambios de estado aparecen en el enlace; esta versión no envía correos de estado automáticamente. No publicar claves en el repositorio.
 
-Los precios de envío, promesas de entrega, cobro en línea, reserva de stock y plazos de retención de datos requieren validación con el taller antes de activarse.
+Consulta la [guía de Webpay y operación de pedidos](docs/webpay-camicat.md) para confirmar el total, acordar la entrega y habilitar el cobro cuando el taller esté listo.

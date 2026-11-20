@@ -20,12 +20,52 @@
   for(const e of events){const li=node('li'),when=node('time',A.date(e.created_at));when.dateTime=e.created_at;li.append(node('strong',A.states[e.status]||e.status),node('br'),when);if(e.detail)li.append(node('div',e.detail));timeline.append(li);}
   rows.push(timeline);$('trackResult').replaceChildren(...rows);$('trackResult').hidden=false;
  }
+ async function showPayment(token,key){
+  if(!A.payment)return;
+  const config=await A.payment().catch(()=>null);
+  if(!config?.enabled||key!==revision)return;
+  const payment=await A.payment('view',{token}).catch(()=>null);
+  if(key!==revision||!payment?.quote||payment.state==='unavailable')return;
+  const section=node('section'),message=node('p',A.paymentStates[payment.state]||'Pago en verificación');
+  section.className='order-payment-panel';
+  section.append(node('h3',payment.mode==='integration'?'Webpay · Pago de prueba':'Pago con Webpay'),message,
+   node('p','Productos: '+A.money(payment.quote.amount-payment.quote.shipping)),
+   node('p','Total confirmado: '+A.money(payment.quote.amount)),
+   node('p',(payment.quote.delivery==='retiro'?'Retiro':'Despacho')+' · '+payment.quote.detail),
+   node('p','Costo de entrega incluido: '+A.money(payment.quote.shipping)));
+  message.setAttribute('role','status');
+  if(payment.state==='review')section.append(node('p','Estamos verificando el resultado. Vuelve a consultar el pedido.'));
+  if(payment.canStart){
+   const button=node('button',payment.state==='pending'?'Continuar con Webpay':payment.mode==='integration'?'Probar pago':'Pagar con Webpay');
+   button.type='button';
+   button.onclick=async()=>{
+    button.disabled=true;
+    message.textContent='Conectando con Webpay…';
+    try {
+     const data=await A.payment('start',{token,amount:payment.quote.amount,approvedAt:payment.quote.approvedAt});
+     if(key!==revision)return;
+     const destination=new URL(data.url);
+     const expected=payment.mode==='integration'?'https://webpay3gint.transbank.cl':'https://webpay3g.transbank.cl';
+     if(destination.origin!==expected||destination.pathname!=='/webpayserver/initTransaction'||!data.token)throw Error('Webpay no devolvió un destino válido.');
+     try{sessionStorage.setItem('camicat-webpay-return-link',token);}catch{}
+     const form=node('form'),field=node('input');
+     form.action=destination.origin+destination.pathname;
+     form.method='POST';
+     field.type='hidden';field.name='token_ws';field.value=data.token;
+     form.append(field);section.append(form);form.submit();
+    }catch(error){message.textContent=error.message;button.disabled=false;}
+   };
+   section.append(button);
+  }
+  const timeline=$('trackResult').querySelector('.order-timeline');
+  timeline?.before(section);
+ }
  async function fetchTrack(t){
   const key=++revision;
   $('trackResult').hidden=true;
   if(!A.cap.test(t)){$('trackStatus').textContent=t?'Ese enlace no corresponde al seguimiento de Camicat.':'';return;}
   $('trackStatus').textContent='Consultando al taller…';
-  try{const data=await A.request('track',{token:t});if(key!==revision)return;show(data);$('trackStatus').textContent='';}catch(e){if(key===revision)$('trackStatus').textContent=e.message;}
+  try{const data=await A.request('track',{token:t});if(key!==revision)return;show(data);$('trackStatus').textContent='';void showPayment(t,key);}catch(e){if(key===revision)$('trackStatus').textContent=e.message;}
  }
  $('trackForm').onsubmit=e=>{
   e.preventDefault();let t='';

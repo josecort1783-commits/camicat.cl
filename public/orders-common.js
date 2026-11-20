@@ -2,7 +2,7 @@
 window.CamicatOrders=(()=>{
  const endpoint='https://wbqpcunyzvdvhaiduyem.supabase.co/functions/v1/camicat-orders';
  const apiKey='sb_publishable_cYM7lEnUtR51n2-Gqhv5kQ_TKbRnu_h';
- const states={recibido:'Solicitud recibida',cotizado:'Cotización preparada',confirmado:'Pedido confirmado',preparando:'En preparación',listo:'Listo para retirar',enviado:'Despachado',entregado:'Entregado',cancelado:'Cancelado'};
+ const states={recibido:'Solicitud recibida',cotizado:'Cotización preparada',confirmado:'Pedido confirmado',preparando:'En preparación',listo:'Listo para retirar',enviado:'Despachado',entregado:'Entregado',cancelado:'Cancelado',pago_habilitado:'Pago habilitado',pago_confirmado:'Pago confirmado'};
  const cap=/^[a-f0-9]{64}$/;
  const money=n=>new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP'}).format(n);
  const date=s=>new Date(s).toLocaleString('es-CL',{dateStyle:'medium',timeStyle:'short',timeZone:'America/Santiago'});
@@ -19,5 +19,19 @@ window.CamicatOrders=(()=>{
   if(!r.ok||!json)throw Error(json?.error||'No pudimos conectar. Intenta de nuevo.');
   return json;
  }
- return {states,cap,money,date,node,link,token,list,remember,forget,request};
+ const paymentStates={
+  unavailable:'Pago aún por habilitar',ready:'Pendiente de pago',creating:'Iniciando el pago',
+  pending:'Pago iniciado',review:'Pago en verificación',paid:'Pago confirmado',failed:'Pago rechazado',cancelled:'Pago cancelado',
+ };
+ async function payment(action,data={},access){
+  const r=await fetch('/api/webpay',{
+   method:action?'POST':'GET',
+   headers:action?{'Content-Type':'application/json',...(access?{Authorization:'Bearer '+access}:{})}:{},
+   body:action?JSON.stringify({...data,action}):undefined,signal:AbortSignal.timeout(28000),
+  });
+  const info=await r.json().catch(()=>null);
+  if(!r.ok||!info)throw Error(info?.error||'No pudimos consultar Webpay.');
+  return info;
+ }
+ return {payment,paymentStates,states,cap,money,date,node,link,token,list,remember,forget,request};
 })();
