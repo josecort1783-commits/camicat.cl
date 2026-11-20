@@ -184,3 +184,16 @@ body[data-staff-panel=open] #staffGate { display:none }
  #connectionDialog h2{font-size:clamp(1.65rem,7vw,2.15rem);padding-right:2.5rem;line-height:1.15}
  #connectionDialog input,#staffMfaGate input{font-size:16px;min-width:0;max-width:100%}
 }
+
+#staffResetGate {display:none}
+body[data-staff-panel=reset] > :not(#staffResetGate) {display:none !important}
+body[data-staff-panel=reset] > #staffResetGate {display:grid}
+.staff-reset-card {width:min(100%,480px)}
+.staff-reset-card #staffResetAccount {overflow-wrap:anywhere}
+#staffNewPasswordForm {display:grid;gap:12px;margin-top:18px}
+#staffNewPasswordForm[hidden] {display:none}
+#staffNewPasswordForm label {display:grid;gap:6px;font-size:.95rem;font-weight:700}
+#staffNewPasswordForm input {min-width:0;height:46px;padding:7px 10px;font-size:16px}
+#staffNewPasswordHint {margin:0;color:#405742;font-size:.88rem}
+#staffNewPasswordStatus {margin-top:13px}
+#staffNewPasswordStatus:empty,#staffResetFinish[hidden] {display:none}

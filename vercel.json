@@ -8,6 +8,10 @@
       "destination": "/admin/index.html"
     },
     {
+      "source": "/admin/restablecer",
+      "destination": "/admin/index.html"
+    },
+    {
       "source": "/admin/assets/:asset*",
       "destination": "/assets/:asset*"
     }
