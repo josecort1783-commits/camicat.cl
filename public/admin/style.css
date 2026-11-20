@@ -197,3 +197,22 @@ body[data-staff-panel=reset] > #staffResetGate {display:grid}
 #staffNewPasswordHint {margin:0;color:#405742;font-size:.88rem}
 #staffNewPasswordStatus {margin-top:13px}
 #staffNewPasswordStatus:empty,#staffResetFinish[hidden] {display:none}
+
+.session-exit {
+ display:inline-flex;align-items:center;justify-content:center;gap:7px;
+ min-height:44px;padding:0 14px;border:1px solid #c2a99a;border-radius:10px;
+ background:#faf1eb;color:#654131;font:inherit;font-weight:700;white-space:nowrap;
+}
+.session-exit .out-icon {width:17px;height:17px;flex:none}
+.session-exit:hover:not(:disabled) {background:#f2ded0;border-color:#9e745e}
+.session-exit:focus-visible {outline-color:#8b5440}
+.session-exit:disabled {opacity:.65}
+#connectedPanel .session-exit {margin-top:10px}
+.workspace .primary {box-shadow:0 2px 0 #30433333}
+.workspace .secondary,.workspace .edit-button,.workspace .filters button {border-radius:9px}
+.workspace .edit-button {min-height:40px}
+.workspace .panel-shortcuts a {min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+@media (max-width:740px) {
+ body[data-staff-panel=open] .header-right .mode-pill {display:none}
+ .header-right .session-exit {padding-inline:10px}
+}
