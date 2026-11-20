@@ -31,14 +31,46 @@ function canAdd(id){
 function add(id){if(!canAdd(id))return false;const p=products.find(p=>p.id===id);cart[id]=(cart[id]||0)+1;persistCart();toast(`${p.name} se agregó a tu carrito`);return true;}
 const normalizeCatalogText=value=>String(value).toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 const CATALOG_BATCH=16;
+const catalogCategories=['Aros','Collares','Pulseras','Anillos','Otros'];
+const categoryOf=product=>product.category==='Otros'&&product.productType==='Anillos'?'Anillos':product.category;
+const collectionPhotoIds={Aros:'flor-dorada',Collares:'collar-color'};
+const collectionRoutes=$('#collectionRoutes');
+let lastCollectionMarkup;
+
+function renderCollectionRoutes(){
+ const visible=products.filter(product=>product.visible!==false);
+ const tiles=catalogCategories.map(category=>{
+  const matching=visible.filter(product=>categoryOf(product)===category);
+  const available=matching.filter(product=>quantityLimit(product)>0);
+  const photo=available.find(product=>product.id===collectionPhotoIds[category])??available[0]??matching[0];
+  if(!photo)return '';
+  return `<button type="button" data-collection-route="${category}" aria-pressed="false"><img src="${escapeHtml(photo.image)}" alt="" width="116" height="120" loading="lazy"><span><strong>${category==='Otros'?'Otros accesorios':category}</strong><small>${matching.length} ${matching.length===1?'pieza':'piezas'}</small></span></button>`;
+ }).join('');
+ if(tiles!==lastCollectionMarkup){
+  collectionRoutes.innerHTML=tiles;
+  lastCollectionMarkup=tiles;
+ }
+ collectionRoutes.hidden=!tiles;
+ collectionRoutes.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.collectionRoute===filter)));
+}
+
+collectionRoutes.addEventListener('click',event=>{
+ const route=event.target.closest('[data-collection-route]');
+ if(!route)return;
+ resetCatalogFilters(route.dataset.collectionRoute);
+ const status=$('#resultCount');
+ status.tabIndex=-1;
+ status.focus({preventScroll:true});
+ $('#catalogResults').scrollIntoView({block:'start',behavior:'instant'});
+});
 let catalogLimit=CATALOG_BATCH,lastCatalogQuery='';
 function favorite(id){
  const restoreFocus=document.activeElement?.dataset.fav===id;
  favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];write('-favorites',favorites);renderProducts();
  if(restoreFocus)($$('[data-fav]').find(b=>b.dataset.fav===id)||$('[data-fav]')||$('#clearFilters')).focus({preventScroll:true});
 }
-function resetCatalogFilters(){
- filter='Todos';search='';maxPrice=Infinity;availableOnly=false;$('#search').value='';$('#availableOnly').checked=false;renderProducts();
+function resetCatalogFilters(category='Todos'){
+ filter=category;search='';maxPrice=Infinity;availableOnly=false;$('#search').value='';$('#availableOnly').checked=false;renderProducts();
 }
 function renderProducts(){
  const query=JSON.stringify([filter,search,sort,maxPrice,availableOnly]);
@@ -46,8 +78,8 @@ function renderProducts(){
  const words=normalizeCatalogText(search).trim().split(/\s+/).filter(Boolean);
  const favoriteIds=new Set(favorites);
  const counts=new Map([['Todos',products.length],['Favoritos',0]]);
- for(const p of products){counts.set(p.category,(counts.get(p.category)||0)+1);if(favoriteIds.has(p.id))counts.set('Favoritos',counts.get('Favoritos')+1);}
- for(const category of ['Pulseras','Otros']){
+ for(const p of products){const category=categoryOf(p);counts.set(category,(counts.get(category)||0)+1);if(favoriteIds.has(p.id))counts.set('Favoritos',counts.get('Favoritos')+1);}
+ for(const category of catalogCategories){
   if(!counts.has(category)||$('.chips [data-filter="'+category+'"]'))continue;
   const button=document.createElement('button');button.type='button';button.dataset.filter=category;button.textContent=category;$('.chips').insertBefore(button,$('.chips [data-filter="Favoritos"]'));
  }
@@ -62,7 +94,7 @@ function renderProducts(){
  const ceiling=Math.max(20000,Math.ceil(Math.max(0,...products.map(p=>p.price),Number.isFinite(maxPrice)?maxPrice:0)/1000)*1000);
  $('#maxPrice').max=ceiling;$('#maxPrice').value=Number.isFinite(maxPrice)?maxPrice:ceiling;$('#budgetLabel').textContent=Number.isFinite(maxPrice)?`Hasta ${money(maxPrice)}`:'Sin límite';
  $('#budgetReset').disabled=!Number.isFinite(maxPrice);
- let shown=products.filter(p=>p.price<=maxPrice&&(!availableOnly||quantityLimit(p)>0)&&(filter==='Todos'||filter==='Favoritos'&&favoriteIds.has(p.id)||p.category===filter)&&words.every(word=>normalizeCatalogText(`${p.name} ${p.description} ${p.category} ${p.tag||''}`).includes(word)));
+ let shown=products.filter(p=>p.price<=maxPrice&&(!availableOnly||quantityLimit(p)>0)&&(filter==='Todos'||filter==='Favoritos'&&favoriteIds.has(p.id)||categoryOf(p)===filter)&&words.every(word=>normalizeCatalogText(`${p.name} ${p.description} ${categoryOf(p)} ${p.tag||''}`).includes(word)));
  if(sort==='asc')shown.sort((a,b)=>a.price-b.price);
  if(sort==='desc')shown.sort((a,b)=>b.price-a.price);
  if(sort==='name')shown.sort((a,b)=>a.name.localeCompare(b.name,'es'));
@@ -71,8 +103,9 @@ function renderProducts(){
   const name=escapeHtml(p.name),id=escapeHtml(p.id),saved=favoriteIds.has(p.id),available=quantityLimit(p)>0;
   const reference=defaults.find(item=>item.id===p.id&&item.image===p.image);
   const photoAlt=[p.imageAlt,reference?.imageAlt].find(value=>typeof value==='string'&&value.trim()&&value.length<=160)||p.name+' de Camicat';
-  return `<article class="product-card"><div class="product-image"><button type="button" class="product-view" data-view="${id}" aria-label="Ver detalles de ${name}"><img src="${p.image}" alt="${escapeHtml(photoAlt)}" loading="lazy" width="360" height="640"><span class="catalog-view-label" aria-hidden="true">Ver pieza ${uiIcon('arrow-up-right')}</span></button>${available?'':'<span class="catalog-sold">Agotado</span>'}<button type="button" class="favorite ${saved?'saved':''}" data-fav="${id}" aria-label="${saved?'Quitar de':'Agregar a'} favoritos: ${name}" aria-pressed="${saved}">${uiIcon('heart',saved)}</button></div><div class="product-meta"><span class="catalog-category">${escapeHtml(p.category)}</span><h3><button type="button" data-view="${id}">${name}</button></h3><b>${money(p.price)}</b></div><button type="button" class="quick-add" data-add="${id}" aria-label="${available?`Agregar ${name} al carrito`:`${name} agotado`}" ${available?'':'disabled'}>${available?uiIcon('plus')+' Agregar':'Agotado'}</button></article>`;
+  return `<article class="product-card"><div class="product-image"><button type="button" class="product-view" data-view="${id}" aria-label="Ver detalles de ${name}"><img src="${p.image}" alt="${escapeHtml(photoAlt)}" loading="lazy" width="360" height="640"><span class="catalog-view-label" aria-hidden="true">Ver pieza ${uiIcon('arrow-up-right')}</span></button>${available?'':'<span class="catalog-sold">Agotado</span>'}<button type="button" class="favorite ${saved?'saved':''}" data-fav="${id}" aria-label="${saved?'Quitar de':'Agregar a'} favoritos: ${name}" aria-pressed="${saved}">${uiIcon('heart',saved)}</button></div><div class="product-meta"><span class="catalog-category">${escapeHtml(categoryOf(p))}</span><h3><button type="button" data-view="${id}">${name}</button></h3><b>${money(p.price)}</b></div><button type="button" class="quick-add" data-add="${id}" aria-label="${available?`Agregar ${name} al carrito`:`${name} agotado`}" ${available?'':'disabled'}>${available?uiIcon('plus')+' Agregar':'Agotado'}</button></article>`;
  }).join('');
+ renderCollectionRoutes();
  $('#resultCount').textContent=`${shown.length} ${shown.length===1?'pieza':'piezas'}`;
  $('#empty').hidden=shown.length!==0;
  $('#catalogEmptyText').textContent=filter==='Favoritos'&&!counts.get('Favoritos')?'Guarda una pieza con el corazón para encontrarla aquí.':'Prueba con otro presupuesto o una nueva búsqueda.';
@@ -90,7 +123,7 @@ function renderHighlights(){
 $('#featureProducts').addEventListener('click',event=>{const button=event.target.closest('[data-feature-view]');if(button)showProduct(button.dataset.featureView);});
 $('#products').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.view)showProduct(b.dataset.view);if(b.dataset.add&&add(b.dataset.add))b.dispatchEvent(new CustomEvent('camicat:added',{bubbles:true}));if(b.dataset.fav)favorite(b.dataset.fav)});
 $('.chips').addEventListener('click',e=>{const button=e.target.closest('[data-filter]');if(button){filter=button.dataset.filter;renderProducts()}});
-$('#search').addEventListener('input',e=>{search=e.target.value.toLocaleLowerCase('es');renderProducts()});$('#sort').addEventListener('change',e=>{sort=e.target.value;renderProducts()});$('#clearFilters').onclick=$('#clearCatalogFilters').onclick=resetCatalogFilters;$('#availableOnly').onchange=()=>{availableOnly=$('#availableOnly').checked;renderProducts();};$('#catalogMore').onclick=()=>{const next=catalogLimit;catalogLimit+=CATALOG_BATCH;renderProducts();$$('.product-card')[next]?.querySelector('[data-view]')?.focus();};$('#favoritesToggle').onclick=()=>{filter='Favoritos';renderProducts();$('#coleccion').scrollIntoView({behavior:'smooth'})};
+$('#search').addEventListener('input',e=>{search=e.target.value.toLocaleLowerCase('es');renderProducts()});$('#sort').addEventListener('change',e=>{sort=e.target.value;renderProducts()});$('#clearFilters').onclick=$('#clearCatalogFilters').onclick=()=>resetCatalogFilters();$('#availableOnly').onchange=()=>{availableOnly=$('#availableOnly').checked;renderProducts();};$('#catalogMore').onclick=()=>{const next=catalogLimit;catalogLimit+=CATALOG_BATCH;renderProducts();$$('.product-card')[next]?.querySelector('[data-view]')?.focus();};$('#favoritesToggle').onclick=()=>{filter='Favoritos';renderProducts();$('#coleccion').scrollIntoView({behavior:'smooth'})};
 // Optional facts and photos stay separate from the seed price and stock preview.
 function productFacts(p){
  const seed=defaults.find(item=>item.id===p.id&&item.image===p.image);
@@ -102,6 +135,9 @@ function showProduct(id){
  const p=products.find(item=>item.id===id);
  if(!p)return;
  const available=quantityLimit(p)>0, facts=productFacts(p), name=escapeHtml(p.name);
+ const related=products.filter(item=>item.id!==id&&item.visible!==false&&quantityLimit(item)>0)
+  .sort((a,b)=>Number(categoryOf(b)===categoryOf(p))-Number(categoryOf(a)===categoryOf(p)))
+  .slice(0,2);
  const stock=!available?'Agotado':Number.isInteger(p.stock)?'Disponible según catálogo':'Stock por confirmar';
  $('#productDetail').innerHTML=`<div class="product-detail-layout">
  <div class="detail-media">
@@ -110,9 +146,8 @@ function showProduct(id){
  ${facts.wornImage?`<button type="button" class="detail-worn" data-full-photo="${escapeHtml(p.id)}" data-photo-kind="worn"><img src="${escapeHtml(facts.wornImage)}" alt="" loading="lazy"><span>Ver cómo queda ${uiIcon('arrow-up-right')}</span></button>`:''}
  </div>
  <div class="detail-copy">
- <span class="detail-category">${escapeHtml(p.category)} · Camicat</span>
+ <span class="detail-category">${escapeHtml(categoryOf(p))} · Camicat</span>
  <h2 id="detailProductTitle">${name}</h2>
- <p class="detail-price">${money(p.price)} <small>Precio referencial</small></p>
  <p class="detail-description">${escapeHtml(p.description)}</p>
  <dl class="detail-facts">
  <div><dt>Material</dt><dd>${escapeHtml(facts.material)}</dd></div>
@@ -120,12 +155,24 @@ function showProduct(id){
  <div><dt>Disponibilidad</dt><dd>${stock}</dd></div>
  </dl>
  <div class="detail-delivery"><p><strong>Retiro en Requínoa</strong> · Lugar y horario por coordinar.</p><p><strong>Envíos a todo Chile</strong> · El despacho se cotiza aparte antes de pagar.</p></div>
- <button type="button" class="button full" id="detailAdd" ${available?'':'disabled'}>${available?'Agregar a mi selección':'Agotado'}</button>
- </div></div>`;
+ </div>
+ ${related.length?`<section class="detail-related" aria-label="Otras piezas de Camicat"><h3>También te puede gustar</h3><div>${related.map(item=>`<button type="button" data-related-piece="${escapeHtml(item.id)}"><img src="${escapeHtml(item.image)}" alt="" width="53" height="60" loading="lazy"><span><strong>${escapeHtml(item.name)}</strong><small>${money(item.price)}</small></span></button>`).join('')}</div></section>`:''}
+ </div><div class="detail-buy-bar">
+   <div class="detail-purchase-cost"><strong>${money(p.price)}</strong><small>Precio referencial</small></div>
+   <button type="button" class="button" id="detailAdd" ${available?'':'disabled'}>${available?'Agregar a mi selección':'Agotado'}</button>
+ </div>`;
  $('#detailAdd').onclick=()=>{if(!add(id))return;$('#productDialog').close();openDialog('#cartDialog');};
- openDialog('#productDialog');
+ const dialog=$('#productDialog');
+ if(!dialog.open)openDialog('#productDialog');
+ dialog.scrollTop=0;
+ const heading=$('#detailProductTitle');
+ heading.tabIndex=-1;heading.focus({preventScroll:true});
  window.dispatchEvent(new CustomEvent('camicat:product-open',{detail:{id}}));
 }
+$('#productDetail').addEventListener('click',event=>{
+ const related=event.target.closest('[data-related-piece]');
+ if(related)showProduct(related.dataset.relatedPiece);
+});
 function cartEntries(){return products.filter(p=>cart[p.id]).map(p=>({...p,qty:cart[p.id]}))}
 function cartHasConflicts(items=cartEntries()){return items.some(p=>p.qty>quantityLimit(p));}
 function total(){return cartEntries().reduce((s,p)=>s+p.qty*p.price,0)}

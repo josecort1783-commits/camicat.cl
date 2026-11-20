@@ -184,3 +184,50 @@ body[data-staff-panel=open] #staffGate { display:none }
  #connectionDialog h2{font-size:clamp(1.65rem,7vw,2.15rem);padding-right:2.5rem;line-height:1.15}
  #connectionDialog input,#staffMfaGate input{font-size:16px;min-width:0;max-width:100%}
 }
+
+.staff-gate {
+  max-width:none;
+  background:#e7ecdf;
+  padding:clamp(12px,4vw,52px);
+}
+.staff-entry {
+  width:min(100%,980px);
+  display:grid;
+  grid-template-columns:minmax(320px,1fr) minmax(0,.74fr);
+  background:#faf8f1;
+  border:1px solid #cad4bf;
+  border-radius:12px 36px 12px 36px;
+  overflow:hidden;
+}
+.staff-card {
+  width:auto;
+  background:none;
+  border:0;
+  border-radius:0;
+  padding:clamp(24px,5vw,64px);
+}
+.staff-card h1 {font-size:clamp(36px,5vw,59px);letter-spacing:-.04em}
+.staff-card p {color:#485946}
+.staff-art {margin:0;min-width:0;background:#4e6651}
+.staff-art img {display:block;width:100%;height:100%;max-height:680px;object-fit:cover;object-position:50% 50%}
+.staff-back {font-weight:600;text-underline-offset:4px;text-decoration:underline}
+.staff-brand {margin:15px 0 22px}
+.staff-brand img {width:156px}
+#staffForms form {display:grid;gap:12px;margin-top:20px}
+#staffForms form p {margin:0;font-size:.94rem;color:#485946}
+#staffForms label {display:grid;gap:5px;font-size:.94rem;font-weight:700;color:#263929}
+#staffForms input {
+  min-height:50px;width:100%;min-width:0;padding:10px 12px;font:inherit;font-size:16px;font-weight:400;
+  border:1px solid #aebda5;border-radius:6px;background:#fffdf8;color:#263929;
+}
+#staffForms button {min-height:46px;font-size:.875rem;font-weight:700}
+#staffForms .text-button {color:#375643}
+#staffForms .password-toggle {justify-self:start;margin-block:-6px 0;text-align:left}
+#staffForms .form-error {padding:10px 12px;background:#f8e9df;color:#6d2c24;border-radius:5px;font-size:.9rem}
+#staffForms :focus-visible {outline:2px solid #385941;outline-offset:3px}
+@media(max-width:680px) {
+  .staff-gate {padding:12px;align-items:start}
+  .staff-entry {grid-template-columns:minmax(0,1fr);margin-top:8px}
+  .staff-card {padding:21px 18px 26px}
+  .staff-art {display:none}
+}
