@@ -12,16 +12,34 @@ const security=createStaffSecurity(client);
 const staffOnly=document.body.hasAttribute('data-staff-panel');
 const staffAuthType=staffOnly?new URLSearchParams(location.hash.slice(1)).get('type'):null;
 let staffSetup=['invite','recovery'].includes(staffAuthType);
+const loginForm=$('#loginForm');
+const loginError=$('#loginError');
+const loginButton=$('#loginButton');
+const loginPassword=$('#loginPassword');
+const passwordToggle=$('#toggleLoginPassword');
+function showPassword(visible){
+ loginPassword.type=visible?'text':'password';
+ passwordToggle.setAttribute('aria-pressed',String(visible));
+ passwordToggle.textContent=visible?'Ocultar contraseña':'Mostrar contraseña';
+}
+passwordToggle.onclick=()=>showPassword(loginPassword.type==='password');
+
+function setStaffView(recovery){
+ loginForm.hidden=recovery;
+ $('#staffRecoveryForm').hidden=!recovery;
+ $('#staffIntro').hidden=recovery;
+ $('#staffTitle').textContent=recovery?'Recupera tu acceso':'Panel de Camicat';
+ if(recovery){
+  loginPassword.value='';
+  showPassword(false);
+ }else{
+  loginError.hidden=true;
+  $('#staffResetStatus').textContent='';
+ }
+ (recovery?$('#staffRecoveryEmail'):$('#loginEmail')).focus();
+}
 if(staffOnly){
- $('#staffLogin').disabled=false;
- const setStaffView=(recovery,focus=true)=>{
-  $('#loginForm').hidden=recovery;
-  $('#staffLoginHint').hidden=recovery;
-  $('#staffRecoveryForm').hidden=!recovery;
-  $('#connectionTitle').textContent=recovery?'Crea o recupera tu contraseña':'Iniciar sesión';
-  if(focus)(recovery?$('#staffRecoveryEmail'):$('#loginEmail')).focus();
- };
- $('#staffLogin').onclick=()=>{setStaffView(false,false);open('#connectionDialog');$('#loginEmail').focus();};
+ $('#staffForms').append(loginForm,$('#staffRecoveryForm'));
  $('#staffReset').onclick=()=>{
   $('#staffRecoveryEmail').value=$('#loginEmail').value.trim();
   setStaffView(true);
@@ -34,15 +52,18 @@ if(staffOnly){
   e.preventDefault();
   const field=$('#staffRecoveryEmail'),button=$('#staffRequestLink'),status=$('#staffResetStatus');
   if(button.disabled||!field.reportValidity())return;
+  const submittedEmail=field.value;
   button.disabled=true;
   status.textContent='Solicitando enlace…';
   status.dataset.kind='pending';
   try{
    const {error}=await recoveryRequest(client.auth,field.value);
    if(error)throw error;
-   status.textContent='Solicitud recibida. Si el correo tiene acceso, recibirás un enlace, no un código. Revisa también Spam y Promociones.';
+   if($('#staffRecoveryForm').hidden||field.value!==submittedEmail)return;
+   status.textContent='Si tu correo está habilitado, recibirás un enlace para elegir tu contraseña. Revisa también Spam y Promociones.';
    status.dataset.kind='success';
   }catch(error){
+   if($('#staffRecoveryForm').hidden||field.value!==submittedEmail)return;
    status.dataset.kind='error';
    status.textContent=recoveryMessage(error);
   }finally{button.disabled=false;}
@@ -160,9 +181,43 @@ $('#publish').onclick=()=>{
 $('#confirmPublish').onclick=async()=>{if(busy||!dirty()||!$('#reviewChanges').open)return;$('#reviewChanges').close();busy=true;render();try{if(mode==='cloud'){const result=await publishCatalog(structuredClone(draft),revision);saved=result.products;draft=structuredClone(saved);revision=result.revision;$('#lastUpdated').textContent='Actualizado '+new Date(result.updated_at).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});write('-cloud-'+user.id,null);}else{if(!write('-saved',draft))return;saved=structuredClone(draft);$('#lastUpdated').textContent='Prueba actualizada hoy';}if(mode==='demo')write('-draft',draft);undoState=null;$('#undoBar').hidden=true;toast(mode==='cloud'?'Listo. Tu tienda quedó actualizada.':'Prueba actualizada. La tienda pública no cambió.');}catch(error){toast(error.message);}finally{busy=false;render();}};
 $('#helpOpen').onclick=$('#helpOpenBottom').onclick=()=>open('#helpDialog');$('#mobileConnection').onclick=$('#connectionOpen').onclick=$('#trialConnect').onclick=()=>open('#connectionDialog');
 async function enterCloud(access,loaded=null){if(!access)throw Error('Entra de nuevo para cargar tu tienda.');if(staffOnly&&!await security.requireVerified())throw Error('Verifica el código de tu aplicación para entrar.');const current=loaded??await loadCatalog();user=access;mode='cloud';if(staffOnly)document.body.dataset.staffPanel='open';agenda.connect(true);orders.connect(access);security.connect(true);const checkpoint=read('-cloud-'+user.id,null);revision=checkpoint&&validCatalog(checkpoint.products)?checkpoint.revision:current.revision;saved=current.products;draft=checkpoint&&validCatalog(checkpoint.products)?checkpoint.products:structuredClone(saved);if(checkpoint&&checkpoint.revision!==current.revision)toast('Hay cambios de otro dispositivo. Conservamos tu copia: revisa Conexión antes de actualizar.');undoState=null;$('#undoBar').hidden=true;$('#lastUpdated').textContent='Actualizado '+new Date(current.updated_at).toLocaleDateString('es-CL');$('#loginForm').hidden=true;$('#staffRecoveryForm').hidden=true;$('#staffLoginHint').hidden=true;$('#connectedPanel').hidden=false;$('#connectedEmail').textContent=user.panelLabel||('Acceso de '+user.email);if(staffOnly)$('#staffPasswordForm').hidden=false;render();}
-$('#loginForm').onsubmit=async e=>{e.preventDefault();$('#loginButton').disabled=true;$('#loginError').hidden=true;try{const {error}=await client.auth.signInWithPassword({email:$('#loginEmail').value.trim(),password:$('#loginPassword').value});if(error)throw Error('No pudimos entrar. Revisa tu correo y contraseña, o solicita habilitar tu acceso.');const access=await checkAccess();if(!access)throw Error('No pudimos verificar tu acceso.');if(!staffOnly&&dirty()&&!confirm('Para entrar se cargará el catálogo en línea. ¿Dejar los cambios de prueba guardados en este dispositivo?')){await client.auth.signOut();return;}await enterCloud(access);$('#loginPassword').value='';$('#connectionDialog').close();toast('Ya estás en tu tienda en línea.');}catch(error){$('#loginError').textContent=error.message;$('#loginError').hidden=false;}finally{$('#loginButton').disabled=false;}};
+loginForm.onsubmit=async event=>{
+ event.preventDefault();
+ if(loginButton.disabled)return;
+ loginButton.disabled=true;
+ loginButton.textContent='Entrando…';
+ loginForm.setAttribute('aria-busy','true');
+ loginError.hidden=true;
+ try{
+  const {error}=await client.auth.signInWithPassword({email:$('#loginEmail').value.trim(),password:loginPassword.value});
+  if(error)throw Error('Revisa tu correo y contraseña. Si olvidaste tu contraseña, pide un enlace más abajo.');
+  const access=await checkAccess();
+  if(!access)throw Error('Tu cuenta necesita acceso al panel. Pídele a Tote que revise tu invitación.');
+  if(!staffOnly&&dirty()&&!confirm('Para entrar se cargará el catálogo en línea. ¿Dejar los cambios de prueba guardados en este dispositivo?')){
+   await client.auth.signOut();
+   return;
+  }
+  await enterCloud(access);
+  loginPassword.value='';
+  showPassword(false);
+  $('#connectionDialog').close();
+  if(staffOnly){
+   const heading=$('#main h1');
+   heading.tabIndex=-1;
+   heading.focus({preventScroll:true});
+  }
+  toast('Ya estás en tu tienda en línea.');
+ }catch(error){
+  loginError.textContent=error.message||'No pudimos entrar. Intenta nuevamente.';
+  loginError.hidden=false;
+ }finally{
+  loginButton.disabled=false;
+  loginButton.textContent='Entrar a mi tienda';
+  loginForm.removeAttribute('aria-busy');
+ }
+};
 $('#reloadCloud').onclick=async()=>{if(dirty()&&!confirm('Hay cambios sin actualizar. ¿Descartarlos y traer el catálogo en línea?'))return;try{const access=await checkAccess();if(!access)throw Error('Tu sesión terminó. Entra de nuevo.');const current=await loadCatalog();if(!write('-cloud-'+access.id,null))return;await enterCloud(access,current);toast('Catálogo actualizado desde la tienda.');}catch(error){toast(error.message);}};
-$('#logout').onclick=async()=>{if(dirty()&&!confirm('Hay cambios sin actualizar. ¿Cerrar tu acceso y volver a la prueba?'))return;await client.auth.signOut();user=null;mode='demo';if(staffOnly){document.body.dataset.staffPanel='locked';$('#connectionDialog').close();}agenda.connect(false);orders.connect(null);security.connect(false);revision=null;saved=read('-saved',BASE);if(!validCatalog(saved))saved=structuredClone(BASE);draft=read('-draft',saved);if(!validCatalog(draft))draft=structuredClone(saved);$('#loginForm').hidden=false;$('#connectedPanel').hidden=true;$('#loginPassword').value='';$('#lastUpdated').textContent='Catálogo de prueba';render();toast('Acceso en línea cerrado.');};
+$('#logout').onclick=async()=>{if(dirty()&&!confirm('Hay cambios sin actualizar. ¿Cerrar tu acceso y volver a la prueba?'))return;await client.auth.signOut();user=null;mode='demo';if(staffOnly){document.body.dataset.staffPanel='locked';$('#connectionDialog').close();}agenda.connect(false);orders.connect(null);security.connect(false);revision=null;saved=read('-saved',BASE);if(!validCatalog(saved))saved=structuredClone(BASE);draft=read('-draft',saved);if(!validCatalog(draft))draft=structuredClone(saved);if(staffOnly)setStaffView(false);else loginForm.hidden=false;$('#connectedPanel').hidden=true;loginPassword.value='';showPassword(false);$('#lastUpdated').textContent='Catálogo de prueba';render();toast('Acceso en línea cerrado.');};
 $('#exportBackup').onclick=()=>{const blob=new Blob([JSON.stringify({version:1,exported_at:new Date().toISOString(),products:draft},null,2)],{type:'application/json'});const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='camicat-catalogo-respaldo.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 $('#resetDemo').onclick=()=>{if(mode!=='demo'){toast('Esta opción es solo para la prueba.');return;}if(!confirm('¿Restaurar la prueba con las ocho piezas iniciales? La tienda pública no cambiará.'))return;saved=structuredClone(BASE);draft=structuredClone(BASE);write('-saved',saved);write('-draft',draft);undoState=null;$('#undoBar').hidden=true;render();toast('Prueba restaurada.');};
 render();

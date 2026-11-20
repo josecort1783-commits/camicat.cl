@@ -77,7 +77,7 @@
   try{localStorage.setItem(KEY+recentKey,JSON.stringify(recent));}catch{/* Browsing still works without local storage. */}
  }
  function addShare(id){
-  const target=$('#productDetail .detail-price');
+  const target=$('#productDetail .detail-description');
   if(!target)return;
   target.insertAdjacentHTML('afterend',`<div class="detail-share"><button type="button" class="companion-text" id="sharePiece">${uiIcon('arrow-up-right')} Copiar enlace</button><p id="shareStatus" role="status"></p><div id="shareFallback" hidden><label for="shareUrl">Enlace de esta pieza</label><input id="shareUrl" type="text" readonly></div></div>`);
   const shareUrl=new URL(window.location.pathname,window.location.origin);

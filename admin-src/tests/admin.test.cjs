@@ -112,8 +112,8 @@ test('category first, suggested names are optional and anillos save in compatibl
 test('unified admin stays locked until device session and membership are verified',async()=>{
  const anon=await setup({},null,true),{$,w}=anon;
  assert.equal(w.document.body.dataset.staffPanel,'locked');
- $('#staffLogin').click();
- assert.equal($('#connectionDialog').open,true);
+ assert.equal($('#connectionDialog').open,false);
+ assert.ok($('#staffGate').contains($('#loginForm')));
  assert.equal($('#loginForm').hidden,false);
  assert.equal($('#staffPasswordForm').hidden,true);
  anon.dom.window.close();
@@ -129,7 +129,6 @@ test('unified admin stays locked until device session and membership are verifie
 
 test('staff password reset requires a valid email and returns to the panel',async()=>{
  const b=await setup({},null,true),{$,w}=b;
- $('#staffLogin').click();
  $('#staffReset').click();
  const request=()=>$('#staffRecoveryForm').onsubmit({preventDefault(){}});
  await request();
@@ -155,7 +154,7 @@ test('recovery timeout releases the form and differentiates mail service failure
  await assert.rejects(recoveryRequest({resetPasswordForEmail:()=>new Promise(()=>{})},'staff@example.test',8),{code:'recovery_timeout'});
  assert.match(recoveryMessage({status:504}),/confirmar el envío a tiempo/);
  const b=await setup({},null,true),{$,w}=b;
- $('#staffLogin').click();$('#staffReset').click();$('#staffRecoveryEmail').value='staff@example.test';
+ $('#staffReset').click();$('#staffRecoveryEmail').value='staff@example.test';
  w.__resetError={status:504};
  await $('#staffRecoveryForm').onsubmit({preventDefault(){}});
  assert.equal($('#staffRequestLink').disabled,false);assert.match($('#staffResetStatus').textContent,/confirmar el envío a tiempo/);
