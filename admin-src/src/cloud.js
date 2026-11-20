@@ -1,8 +1,7 @@
-import {recoveryFetch} from './recovery.js';
 import {createClient} from '@supabase/supabase-js';
 import {SUPABASE_URL,SUPABASE_KEY} from './config.js';
 import {validCatalog,uniqueId} from './model.js';
-export const client=createClient(SUPABASE_URL,SUPABASE_KEY,{global:{fetch:recoveryFetch},auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+export const client=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
 export function createRecoveryClient(){
  return createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{storageKey:'camicat-password-reset',persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
 }

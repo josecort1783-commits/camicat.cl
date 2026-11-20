@@ -39,7 +39,7 @@ if(staffOnly){
   status.textContent='Solicitando enlace…';
   status.dataset.kind='pending';
   try{
-   const {error}=await recoveryRequest(client.auth,field.value);
+   const {error}=await recoveryRequest(field.value);
    if(error)throw error;
    status.textContent='Solicitud recibida. Si el correo tiene acceso, recibirás un enlace, no un código. Revisa también Spam y Promociones.';
    status.dataset.kind='success';
