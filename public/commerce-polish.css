@@ -1,0 +1,45 @@
+/* Shared geometry, then tonal surfaces for the Christmas collection. */
+:root {--commerce-radius:14px;--commerce-edge:rgba(68,38,38,.18);--commerce-shadow:0 3px 9px #28131b0b,0 18px 48px #28131b16}
+#productDialog,#cartDialog,#orderDialog {border:1px solid var(--commerce-edge);border-radius:22px;box-shadow:0 20px 80px #160c2440}
+#productDialog :is(#detailAdd,#sharePiece,.detail-photo>span),#orderDialog :is(button,.delivery-option,.checkout-summary,.review-card),#cartDialog :is(.button,.cart-delivery,.cart-benefit) {border-radius:var(--commerce-radius)}
+#productDialog #detailAdd,#orderDialog #reviewOrder,#cartDialog #checkout {min-height:50px;box-shadow:0 3px 0 #280e2020,0 7px 16px #280e2014}
+#productDialog .detail-photo {border-radius:16px;box-shadow:inset 0 0 0 1px var(--commerce-edge)}
+#productDialog .detail-photo>span {border:1px solid var(--commerce-edge);min-height:44px;box-shadow:0 2px 8px #28131b0a}
+#productDialog .detail-facts {padding-block:14px;border-block:1px solid var(--commerce-edge);gap:12px}
+#productDialog .detail-delivery {border:1px solid var(--commerce-edge);border-radius:14px;box-shadow:0 2px 8px #28131b08}
+#productDialog #sharePiece {min-height:44px;padding:9px 13px;font-size:13px;text-decoration:none;margin-block:0 12px}
+#productDialog :is(.detail-category,.detail-price small) {color:var(--muted)}
+#productDialog .detail-copy {padding-top:30px}
+#orderDialog #checkoutBackCart {border:0;border-radius:10px;padding:8px 12px;min-height:44px;text-decoration:none}
+#orderDialog #checkoutBackCart:focus:not(:focus-visible) {outline:none;box-shadow:none}
+#orderDialog .checkout-toolbar .close,#productDialog>.close {border:1px solid var(--commerce-edge);box-shadow:0 2px 7px #28131b0d;border-radius:50%}
+#orderDialog .checkout-steps {padding-bottom:18px;border-bottom:1px solid var(--commerce-edge)}
+#orderDialog #orderForm :is(input:not([type=radio]):not([type=checkbox]),textarea,select) {border-radius:12px;box-shadow:inset 0 2px 3px #28131b05}
+#orderDialog .delivery-option {box-shadow:0 2px 5px #28131b06;transition:background-color 160ms,border-color 160ms}
+#orderDialog .checkout-summary {border-radius:18px;box-shadow:var(--commerce-shadow)}
+#orderDialog :is(button,input,select,textarea):focus-visible,#productDialog button:focus-visible {outline:2px solid currentColor;outline-offset:3px}
+:root[data-jewel-scene=christmas] {--commerce-edge:#87455242}
+:root[data-jewel-scene=christmas] :is(.button,header .bag,header .header-actions a,#products .quick-add,.portrait-open,.back-to-top) {border-radius:12px}
+:root[data-jewel-scene=christmas] #coleccion.shop-section {border-radius:22px!important;box-shadow:var(--commerce-shadow)}
+:root[data-jewel-scene=christmas] #products .product-image {border-radius:16px;border:1px solid var(--commerce-edge);box-shadow:0 4px 14px #28131b0e}
+:root[data-jewel-scene=christmas] #coleccion :is(.search,.filter-panel,#sort,.view-button,.chips button,.catalog-delivery) {border-radius:12px}
+:root[data-jewel-scene=christmas] :is(.custom-jewel,.fair-banner,.fair-section,.atelier-taller,.heart-story,.shopping-guide,.style-studio) {border-radius:20px;box-shadow:var(--commerce-shadow)}
+:root[data-jewel-scene=christmas] #orderDialog .checkout-toolbar {background:#e9aaa7f5;border-color:var(--commerce-edge)}
+:root[data-jewel-scene=christmas] #orderDialog #checkoutBackCart {color:var(--season-ink);background:#efb9b1}
+:root[data-jewel-scene=christmas] #orderDialog .checkout-toolbar .close,:root[data-jewel-scene=christmas] #productDialog>.close {background:#efb9b1;color:var(--season-ink)}
+:root[data-jewel-scene=christmas] #orderDialog #orderForm :is(input:not([type=radio]):not([type=checkbox]),textarea,select) {background:#f2c6bf;border:1px solid #9e59666e;color:var(--season-ink)}
+:root[data-jewel-scene=christmas] #orderDialog #orderForm :is(input,textarea)::placeholder {color:#784552;opacity:1}
+:root[data-jewel-scene=christmas] #orderDialog :is(.checkout-fields label,.checkout-delivery>legend,.delivery-option small,.delivery-option>span:last-child,.checkout-disclaimer,.checkout-steps) {color:var(--season-ink)}
+:root[data-jewel-scene=christmas] #orderDialog #orderForm .delivery-option {background:#efb9b1;border:1px solid #a15c696b;color:var(--season-ink)}
+:root[data-jewel-scene=christmas] #orderDialog #orderForm .delivery-option:has(input:checked) {background:#f2c6bf;border-color:#722d3b;box-shadow:inset 0 0 0 1px #722d3b,0 3px 9px #722d3b13}
+:root[data-jewel-scene=christmas] #orderDialog #orderForm input[type=radio] {accent-color:#722d3b}
+:root[data-jewel-scene=christmas] #orderDialog .checkout-steps li span {background:#efb9b1;color:#4b1e2c}
+:root[data-jewel-scene=christmas] #orderDialog .checkout-steps li[aria-current=step] span {background:#4b1e2c;color:#f2c6bf}
+:root[data-jewel-scene=christmas] #orderDialog :is(.checkout-summary,.review-card,#addressFields) {background:#efb9b1;border-color:var(--commerce-edge)}
+@media(hover:hover) and (pointer:fine) {#productDialog #detailAdd:hover,#orderDialog #reviewOrder:hover,#cartDialog #checkout:hover {filter:brightness(1.1)}}
+@media(prefers-reduced-motion:no-preference) {#productDialog #detailAdd,#orderDialog #reviewOrder,#cartDialog #checkout {transition:transform 140ms ease}#productDialog #detailAdd:active,#orderDialog #reviewOrder:active,#cartDialog #checkout:active {transform:scale(.98)}}
+@media(max-width:650px) {#productDialog {border-radius:20px}#productDialog .detail-copy {padding:20px 16px}#orderDialog {border:0;border-radius:0}#orderDialog .checkout-summary {box-shadow:0 3px 12px #28131b0b}}
+
+:root[data-jewel-scene=christmas] #cartDialog .close {background:#efb9b1;color:var(--season-ink);border:1px solid var(--commerce-edge);border-radius:50%;box-shadow:0 2px 7px #28131b0d}
+:root[data-jewel-scene=christmas] #cartDialog :is(.cart-journey,.cart-totals,.cart-discount) {color:var(--season-ink)}
+:root[data-jewel-scene=christmas] #cartDialog .cart-journey li[aria-current=step] {color:var(--season-ink)}
