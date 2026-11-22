@@ -36,3 +36,13 @@ En producción se verificó el 20/11/2026 que faltan las credenciales de correo 
 La futura integración Webpay tiene un evento separado `pago_confirmado`. La cola solo genera avisos de venta pagada si existe un intento pagado en modo producción. Los pagos de integración y las cotizaciones no cumplen esa condición. Cuando se integre el callback de Webpay, invocar también el despacho de la cola después de verificar el pago para enviar el aviso inmediatamente; el panel ya recoge esos avisos pendientes. La pasarela todavía no está activada.
 
 Los destinatarios autorizados y el permiso de auditoría se guardan en `camicat_order_staff_policy`, una tabla privada para el servidor. La migración `20261120233702_camicat_private_order_staff_policy.sql` crea la estructura. En una instalación nueva debe configurarse allí el equipo por un operador autorizado; no se incluyen sus direcciones en los archivos del repositorio. El panel requiere simultáneamente correo confirmado, pertenencia al equipo y una dirección autorizada en esa política.
+
+### Escaparate 3D
+
+`atelier-depth.css` y `atelier-depth.js` presentan las fotografías existentes con un marco de vitrina y una inclinación muy leve con ratón, desactivada en pantallas táctiles y con movimiento reducido. El acceso “Explorar en 3D” lleva al estudio dentro de la página.
+
+`jewel-3d.js` comparte una única escena y un único lienzo entre el escaparate y el diálogo ampliado. Carga el motor al entrar en pantalla, o con interacción cuando el navegador solicita ahorro de datos. El giro comienza solo al pedirlo y se pausa fuera de pantalla, con otra ventana modal o al ocultar la pestaña. Los acabados y el modelo seleccionado se sincronizan entre las dos vistas. En móvil, el escaparate admite desplazamiento vertical de la página; la vista ampliada mantiene los controles de acercamiento.
+
+Los tres modelos son estudios de referencia del archivo `jewel-models.mjs`, no reproducciones de inventario. Se conservan las fotos originales del catálogo y el aviso visible sobre ese alcance. No se añadieron imágenes generadas. Para reproducciones fieles hace falta preparar modelos o capturas de los productos reales.
+
+QA: vista en móvil de 320 y 390 px, tablet de 768 px y escritorio; botones táctiles de al menos 44 px. La revisión del navegador disponible usó el renderizador de respaldo Canvas con geometría 3D, porque WebGL está deshabilitado en ese entorno. La ruta WebGL y las pruebas en hardware iPhone real deben comprobarse adicionalmente. La prueba del estudio valida carga diferida, escena única, selección, acabados y pausa al salir de pantalla.
