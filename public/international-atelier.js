@@ -32,31 +32,4 @@
   document.addEventListener('keydown',event=>{if(event.key==='Escape')reset();});
   new MutationObserver(reset).observe(photo,{attributes:true,attributeFilter:['src']});
  }
- // Animate only visible arrivals. A missing observer or failed JS leaves all content readable.
- if(typeof IntersectionObserver!=='function'||typeof Element.prototype.animate!=='function')return;
- const targets=new Set();
- const observer=new IntersectionObserver(entries=>{
-  for(const entry of entries){
-   if(!entry.isIntersecting)continue;
-   observer.unobserve(entry.target);
-   if(motionOff())continue;
-   const el=entry.target;
-   if(el.closest('[hidden]'))continue;
-   const animation=el.animate([{opacity:.65,transform:'translateY(18px)'},{opacity:1,transform:'translateY(0)'}],
-    {duration:520,delay:Number(el.dataset.intlDelay||0),easing:'cubic-bezier(.2,.7,.3,1)'});
-   const stop=()=>animation.cancel();
-   reduced.addEventListener('change',stop,{once:true});
-   animation.finished.catch(()=>{}).finally(()=>reduced.removeEventListener('change',stop));
-  }
- },{threshold:.07});
- const observe=(scope)=>{
-  scope.querySelectorAll('.atelier-intro h1,.atelier-lead,.atelier-gallery,.shop-title h2,#products .product-card,.custom-intro h2,.studio-copy h2,.heart-story-heading h2').forEach((el,index)=>{
-   if(targets.has(el))return;
-   targets.add(el);el.dataset.intlDelay=String(Math.min(index%3,2)*65);observer.observe(el);
-  });
- };
- observe(document);
- const catalog=document.getElementById('products');
- if(catalog)new MutationObserver(()=>observe(catalog)).observe(catalog,{childList:true});
- reduced.addEventListener('change',()=>{if(reduced.matches)document.getAnimations().forEach(a=>{if(a.effect?.target?.dataset?.intlDelay!==undefined)a.cancel();});});
 })();

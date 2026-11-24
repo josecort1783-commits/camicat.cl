@@ -14,7 +14,7 @@
   else window.addEventListener('resize', syncHeaderHeight, {passive: true});
   const motion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
   const canAnimate = () => !motion?.matches && !root.classList.contains('ambient-static');
-  if (!location.hash && canAnimate()) hero.classList.add('atelier-opening');
+  if (!location.hash && canAnimate() && !document.querySelector('.cinema-atmosphere')) hero.classList.add('atelier-opening');
   const headings = document.querySelectorAll(
     '#catalogTitle,#customTitle,#threeInviteTitle,#fairTitle,#heartStoryTitle,#featureTitle,#styleStudioTitle,#guideTitle'
   );
@@ -44,6 +44,7 @@
   if (promo) new IntersectionObserver(([entry]) => {
     header.classList.toggle('shop-header-raised', !entry.isIntersecting && entry.boundingClientRect.bottom <= 0);
   }).observe(promo);
+  if (document.querySelector('.cinema-atmosphere')) return;
   const chapters = new IntersectionObserver(entries => {
     for (const entry of entries) {
       if (!entry.isIntersecting || entry.target.closest('[hidden]')) continue;
