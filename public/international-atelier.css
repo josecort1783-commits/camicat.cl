@@ -1,0 +1,106 @@
+/* Camicat editorial: the wire piece, its drawing and its maker. */
+:root {--intl-paper:#f4f1e8;--intl-field:#e2e8d8;--intl-ink:#293f30;--intl-action:#36533e;--intl-ease:cubic-bezier(.2,.7,.3,1)}
+:root[data-jewel-scene=christmas] {--intl-paper:#f3ded4;--intl-field:#e9c5bf;--intl-ink:#3d1c29;--intl-action:#4b1e2c}
+:root body {text-rendering:optimizeLegibility}
+:root body main>.atelier-hero {grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:clamp(28px,5vw,80px);padding-block:clamp(32px,5vw,72px);align-items:center}
+:root body .atelier-hero h1 {font-size:clamp(48px,6.2vw,86px);line-height:1.01;letter-spacing:-.045em;max-width:12ch;margin-bottom:24px}
+:root body .atelier-lead {font-size:clamp(16px,1.4vw,19px);line-height:1.65;max-width:36ch}
+.atelier-makers {font-size:14px;line-height:1.6;margin:18px 0 26px;color:inherit}
+:root body .atelier-hero .folio {padding:0;background:var(--intl-paper);color:var(--intl-ink);border:0;border-radius:4px;box-shadow:none;overflow:hidden;max-width:600px}
+:root body .atelier-hero .folio-header {padding:22px 24px 8px;gap:16px;border:0}
+:root body .atelier-hero .folio-header h2 {font:400 clamp(22px,2.2vw,30px)/1.15 Georgia,serif;letter-spacing:-.03em;color:var(--intl-ink)}
+:root body .atelier-hero #atelierPieceNumber {display:none}
+:root body .atelier-hero .folio .atelier-tabs {margin:0;padding:6px 24px 18px;gap:6px;justify-content:flex-start;flex-wrap:wrap;border:0}
+:root body .atelier-hero .folio .atelier-tabs button {background:var(--intl-field);color:var(--intl-ink);border:0;box-shadow:none;border-radius:3px;min-height:44px;padding:9px 12px;font-size:14px}
+:root body .atelier-hero .folio .atelier-tabs button[aria-selected=true] {background:var(--intl-action);color:#fff7ef}
+:root body .atelier-hero .folio-spread {grid-template-columns:minmax(0,1fr) 90px;gap:0;background:var(--intl-field)}
+:root body .atelier-hero .folio .atelier-portrait {height:clamp(320px,33vw,460px);margin:0;border:0;border-radius:0;box-shadow:none;isolation:isolate;background:var(--intl-field)}
+:root body .atelier-hero .folio .atelier-portrait img {transition:transform 520ms var(--intl-ease);transform-origin:var(--photo-x,50%) var(--photo-y,50%)}
+:root body .atelier-hero .folio .atelier-portrait.is-magnified img {transform:scale(1.65)!important;cursor:zoom-out}
+:root body .atelier-hero .folio-study {border-radius:0;background:var(--intl-field);padding:12px 5px}
+:root body .atelier-hero .folio-drawing {width:85px;max-width:100%}
+:root body .atelier-hero .folio-study-label {font-size:13px;color:var(--intl-ink)}
+:root body .atelier-hero .folio .portrait-open {border-radius:3px;min-height:44px;background:var(--intl-paper);color:var(--intl-ink);padding:9px 12px;font-size:14px}
+.atelier-photo-tools {display:flex;gap:14px;justify-content:space-between;align-items:center;padding:12px 24px 0}
+.atelier-photo-tools button {background:var(--intl-field);color:var(--intl-ink);border:0;border-radius:3px;min-height:44px;padding:8px 12px;font:inherit;font-size:14px;cursor:pointer;flex-shrink:0}
+.atelier-photo-tools button[aria-pressed=true] {background:var(--intl-action);color:#fff7ef}
+.atelier-photo-tools>span {font-size:13px;line-height:1.45;color:var(--intl-ink);max-width:21ch}
+:root body .atelier-hero .folio-caption {grid-template-columns:minmax(0,1fr) minmax(0,.85fr);padding:18px 24px 24px;gap:18px;border:0}
+:root body .atelier-hero .folio-name>span {font-size:26px;line-height:1.15;color:var(--intl-ink)}
+:root body .atelier-hero .folio-name small,:root body .atelier-hero .folio .atelier-piece-note {font-size:14px;line-height:1.5;color:var(--intl-ink)}
+:root body .atelier-hero .folio-thread {display:none}
+/* Filled, quiet controls. The photograph carries the visual complexity. */
+:root body :is(.atelier-hero-actions>.button,header .bag,#products .quick-add) {border-radius:3px;box-shadow:none;min-height:48px;font-size:14px}
+:root body .atelier-hero-actions>.button {padding:14px 24px}
+:root body .atelier-hero-actions>.button>.ui-icon {display:none}
+:root body .atelier-hero-actions>.text-link {font-size:14px;min-height:44px;display:inline-flex;align-items:center}
+:root body #coleccion.shop-section {border-radius:4px!important;box-shadow:none;border:0;padding:clamp(22px,3.2vw,48px);scroll-margin-top:110px}
+:root body #coleccion .shop-title h2 {font:400 clamp(32px,4vw,52px)/1.08 Georgia,serif;letter-spacing:-.035em;max-width:18ch;margin-bottom:16px}
+:root body #coleccion .shop-title p {font-size:16px;line-height:1.6;max-width:56ch}
+:root body #coleccion .shop-title {gap:24px;margin-bottom:24px}
+:root body #coleccion .catalog-delivery {font-size:14px;padding:14px 16px;border:0;border-radius:3px;box-shadow:none}
+:root body #products.product-grid:not(.list-mode) {gap:36px 22px}
+:root body #products .product-image {border:0;box-shadow:none;border-radius:3px;overflow:hidden}
+:root body #products .product-meta {padding-top:16px}
+:root body #products .product-meta h3 {font-size:20px;line-height:1.25;letter-spacing:-.02em}
+:root body #products .product-meta b {font-size:18px;font-variant-numeric:tabular-nums}
+:root body #products :is(.catalog-category,.compare-toggle,.catalog-view-label) {font-size:14px;letter-spacing:0;text-transform:none}
+:root body #products .product-view img {transition:transform 550ms var(--intl-ease)}
+:root body #coleccion .chips button {font-size:14px;min-height:44px;border-radius:3px;box-shadow:none}
+:root body #coleccion .search input {font-size:16px}
+:root body :is(#personaliza,#estudio-3d,#encuentranos,#nuestra-historia) {scroll-margin-top:110px;margin-block:64px}
+:root body :is(.heart-story,.custom-jewel) {box-shadow:none}
+:root body :is(a,button,summary):focus-visible {outline:3px solid currentColor;outline-offset:4px}
+:root body :is(button,a.button):active:not(:disabled) {transform:translateY(1px)}
+/* An entrance is played only after intersection; content never waits hidden. */
+@media (hover:hover) and (pointer:fine) {
+ :root body #products .product-card:hover .product-view img {transform:scale(1.045)}
+ .atelier-photo-tools button:hover {filter:brightness(.96)}
+ :root body .atelier-hero-actions>.button:hover {transform:translateY(-2px)}
+}
+@media(min-width:1000px) {
+ :root body #coleccion .shop-sidebar {position:sticky;top:108px;align-self:start}
+}
+@media(max-width:760px) {
+ :root body header {display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 16px;height:auto;min-height:0}
+ :root body header .brand {flex:0 0 116px;margin:0}
+ :root body header .brand img {width:116px;max-width:100%;height:auto}
+ :root body header .header-actions {display:flex;flex:1 1 100%;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
+ :root body header .header-actions :is(a,button) {font-size:13px;min-height:44px;white-space:nowrap;padding-inline:9px}
+ :root body header .staff-header-link {margin:0}
+ :root body header .staff-header-link .short-label {display:inline}
+ :root body header .staff-header-link>span:not(.short-label),:root body header .staff-header-link>.ui-icon {display:none}
+ :root body header #favoritesToggle {width:44px;padding:9px}
+ :root body main>.atelier-hero {grid-template-columns:minmax(0,1fr);gap:28px;padding:30px 0 32px}
+ :root body .atelier-hero .atelier-intro {padding:0}
+ :root body .atelier-hero h1 {font-size:clamp(42px,11.6vw,64px);max-width:13ch;margin-bottom:18px}
+ :root body .atelier-lead {font-size:16px;max-width:36ch}
+ .atelier-makers {margin:14px 0 20px}
+ :root body .atelier-hero-actions {gap:10px 18px;flex-wrap:wrap}
+ :root body .atelier-hero .folio {margin:0;max-width:100%}
+ :root body .atelier-hero .folio-header {padding:20px 18px 8px}
+ :root body .atelier-hero .folio .atelier-tabs {padding:4px 18px 16px;gap:5px}
+ :root body .atelier-hero .folio .atelier-tabs button {font-size:14px;padding-inline:10px}
+ :root body .atelier-hero .folio-spread {grid-template-columns:minmax(0,1fr) 68px}
+ :root body .atelier-hero .folio .atelier-portrait {height:clamp(250px,78vw,440px)}
+ :root body .atelier-hero .folio-study-label {font-size:13px}
+ .atelier-photo-tools {padding:12px 18px 0;gap:10px;flex-wrap:wrap}
+ .atelier-photo-tools>span {max-width:none;font-size:13px}
+ :root body .atelier-hero .folio-caption {padding:16px 18px 22px;gap:12px;grid-template-columns:minmax(0,1fr)}
+ :root body .atelier-hero .folio-name>span {font-size:25px}
+ :root body .atelier-hero .folio .atelier-piece-note {margin:0}
+ :root body #coleccion.shop-section {padding:24px 16px;scroll-margin-top:150px}
+ :root body #coleccion .shop-title {display:block}
+ :root body #coleccion .shop-title h2 {font-size:34px;max-width:none}
+ :root body #coleccion .catalog-extra-links {margin-top:18px;gap:14px;flex-wrap:wrap}
+ :root body #products.product-grid:not(.list-mode) {gap:26px 12px}
+ :root body #products .product-meta h3 {font-size:17px}
+ :root body #products .product-meta b {font-size:16px}
+ :root body #products .quick-add {padding-inline:8px;white-space:normal;line-height:1.35}
+ :root body :is(#personaliza,#estudio-3d,#encuentranos,#nuestra-historia) {margin-block:40px;scroll-margin-top:150px}
+}
+@media(prefers-reduced-motion:reduce) {
+ :root body * {scroll-behavior:auto!important}
+ :root body :is(.atelier-portrait img,.product-view img,.atelier-hero-actions>.button) {transition:none!important;animation:none!important}
+ :root body #products .product-card:hover .product-view img {transform:none}
+}
