@@ -16,6 +16,9 @@ if(rawCart&&typeof rawCart==='object'&&!Array.isArray(rawCart))for(const [id,q] 
  if(/^[a-z][a-z0-9-]{1,98}$/.test(id)&&Number.isInteger(q)&&q>0&&q<=99)cart[id]=q;
 }
 let filter='Todos',search='',sort='featured',toastTimer,maxPrice=Infinity,availableOnly=false;let formImage='';
+// Supporting guides can open a category without creating duplicate indexable pages.
+const initialCategory=new URLSearchParams(location.search).get('categoria');
+if(['Aros','Collares','Pulseras','Otros'].includes(initialCategory))filter=initialCategory;
 function toast(t){const host=$('dialog[open]')||document.body;host.append($('#toast'));$('#toast').textContent=t;$('#toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),3300)}
 function openDialog(id){const d=$(id);d.showModal();document.body.classList.add('modal-open')}
 $$('dialog').forEach(d=>{d.addEventListener('close',()=>{if(!$$('dialog[open]').length)document.body.classList.remove('modal-open')});d.addEventListener('click',e=>{if(e.target!==d)return;const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close()})});
