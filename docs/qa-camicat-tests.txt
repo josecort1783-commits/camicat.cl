@@ -1,0 +1,89 @@
+Evidencia de pruebas automatizadas — CamiCat
+25 de noviembre de 2026
+
+ADMINISTRADOR Y SERVICIOS
+Comando: node --test tests/*.test.cjs (desde admin-src)
+✔ edit stock, filter, undo, update demo and restore in another load (447.573488ms)
+✔ add photo product, delete safely, undo and hide; escape names (109.74295ms)
+✔ failed local write keeps draft and rejects missing photograph (46.36464ms)
+✔ model validates unique IDs, stock bounds and trusted image hosts (1.084083ms)
+✔ featured selection respects three slots, can be edited, saved and restored (256.260982ms)
+✔ authorized cloud publish sends the selected flag only on update (148.569079ms)
+✔ agenda demo adds, edits and hides a dated entry and a fixed point (56.131486ms)
+✔ no-op edit and text edits do not reactivate an unavailable product (65.300218ms)
+✔ category first, suggested names are optional and anillos save in compatible category (97.326212ms)
+✔ unified admin stays locked until device session and membership are verified (113.299285ms)
+✔ sign-out protects a draft and keeps the panel open on a service error (122.894616ms)
+✔ staff password reset requires a valid email and returns to the panel (41.172603ms)
+✔ recovery timeout releases the form and differentiates mail service failures (45.215628ms)
+✔ valid recovery link shows the separate password form without opening the catalog (35.205065ms)
+✔ expired recovery URL never enables setting a password (33.339462ms)
+✔ recovery API rejects unlisted emails before contacting Supabase (50.011461ms)
+✔ los datos de la pieza se guardan, se revisan y se pueden dejar pendientes sin inventarlos (107.779047ms)
+✔ quitar búsqueda restaura el catálogo y conserva el botón durante renders idénticos (433.419829ms)
+✔ Ctrl K abre los comandos, filtra acciones y Enter navega a personalizar (126.118565ms)
+✔ el atajo de barra enfoca el buscador sin interceptar la escritura en formularios (151.38778ms)
+✔ los enlaces de las guías abren la categoría correcta y permiten volver a todas (214.631941ms)
+✔ una categoría no autorizada no vacía el catálogo ni inserta contenido (92.350552ms)
+✔ API exige correo confirmado, membresía y política privada; auditoría conserva su permiso (7.618941ms)
+✔ panel avisa nuevos pedidos sin borrar lo que se está editando y se limpia al salir (341.646267ms)
+✔ avisos diferencian solicitud, entrega y pago; protegen el HTML y los destinatarios (2.237331ms)
+✔ proveedor caído conserva cola; reintento mantiene exactamente mensaje y clave; enviados no se repiten (1.03487ms)
+✔ outbox transaccional: permisos, eventos, leases, token y pagos reales (1709.67366ms)
+✔ seguimiento privado renderiza la línea de tiempo sin guardar datos por defecto (72.344234ms)
+✔ registrar cotización muestra el número aun cuando no se pudo enviar correo (150.476205ms)
+✔ estudio carga al entrar, comparte un solo lienzo y conserva selección y acabado al ampliar (502.190892ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2165.606998
+
+TIENDA Y DATOS PÚBLICOS
+Comando: node --test tests/*.test.cjs (desde la raíz)
+✔ las páginas públicas tienen títulos y descripciones propios, canonical y contenido sin JavaScript (217.883033ms)
+✔ las guías y sus fotografías están conectadas; no hay enlaces ni anclas locales rotas (945.491177ms)
+✔ el sitemap contiene las cuatro URLs canónicas; panel e historial siguen fuera de indexación (14.024202ms)
+✔ el CSS consolidado conserva el orden y el contenido de cada fuente, incluidos los diálogos (147.332936ms)
+✔ la ficha explica lo pendiente y prepara una consulta específica sin inventar materiales (334.895719ms)
+✔ los datos confirmados se muestran escapados y agregar conserva el precio referencial (204.085425ms)
+✔ la compra pide dirección solo para envío y no avanza con datos incompletos (402.23318ms)
+✔ personalizar permite orientación, conserva la idea al volver y prepara WhatsApp sin enviarlo (122.465787ms)
+✔ poster starts only when visible and pauses when off screen (1.583101ms)
+✔ user can pause and resume with correct button state (0.531275ms)
+✔ system reduced motion cannot be overridden by automatic animation (0.424195ms)
+✔ background tab pauses and reading progress stays proportional (0.580229ms)
+✔ photo magnifier toggles with a clear accessible state and label (1.807887ms)
+✔ Escape and changing the product reset the magnifier (0.563954ms)
+✔ pointer position stays inside the photo and is cleared on leave (0.497305ms)
+✔ la proyección pública publica solo datos acotados y conserva la privacidad del stock (1832.126857ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1946.190241
+
+REVISIÓN TRAS MOVER LOS CONTROLES DE APARIENCIA
+Comando: node --test tests/artisan-seo.test.cjs tests/brand-commerce.test.cjs
+✔ las páginas públicas tienen títulos y descripciones propios, canonical y contenido sin JavaScript (166.342651ms)
+✔ las guías y sus fotografías están conectadas; no hay enlaces ni anclas locales rotas (979.829009ms)
+✔ el sitemap contiene las cuatro URLs canónicas; panel e historial siguen fuera de indexación (11.859821ms)
+✔ el CSS consolidado conserva el orden y el contenido de cada fuente, incluidos los diálogos (85.729747ms)
+✔ la ficha explica lo pendiente y prepara una consulta específica sin inventar materiales (336.91612ms)
+✔ los datos confirmados se muestran escapados y agregar conserva el precio referencial (209.845069ms)
+✔ la compra pide dirección solo para envío y no avanza con datos incompletos (386.504893ms)
+✔ personalizar permite orientación, conserva la idea al volver y prepara WhatsApp sin enviarlo (112.070615ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1617.675215

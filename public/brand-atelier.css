@@ -78,3 +78,15 @@ body.brand-atelier .appearance-settings>summary{display:list-item;cursor:pointer
 body.brand-atelier .appearance-settings .appearance-bar{width:100%;max-width:none;margin:0;padding:12px 0;background:transparent;display:block;min-height:0}
 body.brand-atelier .appearance-settings .jewel-light-tools{justify-content:flex-start;flex-wrap:wrap;gap:12px}
 body.brand-atelier .appearance-settings button{font-size:14px;min-height:44px}
+/* Keep the title to two lines and the three photo choices together at intermediate widths. */
+@media(min-width:761px) and (max-width:1000px){
+ :root[data-jewel-scene] body.brand-atelier main>.atelier-hero{padding:28px;gap:24px;grid-template-columns:1fr 1fr}
+ :root[data-jewel-scene] body.brand-atelier .atelier-hero h1{font-size:38px;max-width:none}
+ :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-tabs{padding:0 12px 14px;gap:5px}
+ :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-tabs button{font-size:13px;padding:9px 7px}
+ :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio-header{padding:18px 16px 14px}
+}
+@media(max-width:760px){
+ :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:0 12px 14px;gap:4px}
+ :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-tabs button{justify-content:center;text-align:center;white-space:normal;font-size:13px;min-height:50px;padding:8px 4px}
+}

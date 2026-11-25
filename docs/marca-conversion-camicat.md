@@ -4,7 +4,7 @@
 
 ## Las tres prioridades
 
-1. **Reconocer el taller.** Composición de dos columnas, con foto real protagonista, verde salvia/crema y tipografía Georgia/Arial. Se retira de la portada el fondo generado y se reducen dibujos y controles secundarios. El selector de ambientes conserva los modos existentes. La nueva presentación del taller usa la fotografía existente de su mesa; identifica a Gabriel como creador y a Juany como quien orienta al cliente. No son retratos nuevos de ellos.
+1. **Reconocer el taller.** Composición de dos columnas, con foto real protagonista, verde salvia/crema y tipografía Georgia/Arial. Se retira de la portada el fondo generado y se reducen dibujos y controles secundarios. El selector de ambientes conserva los modos existentes y queda en un desplegable al pie, para que la portada se centre en las piezas. La nueva presentación del taller usa la fotografía existente de su mesa; identifica a Gabriel como creador y a Juany como quien orienta al cliente. No son retratos nuevos de ellos.
 2. **Elegir con información.** La ficha presenta materiales, medidas, opciones del diseño, disponibilidad, cuidados y entrega. Lo no confirmado se consulta al taller. La consulta por WhatsApp incluye nombre y referencia de la pieza. La selección y el total siguen siendo referenciales: no se presentan como pago, reserva o venta completada.
 3. **Completar y publicar sin complicaciones.** El editor agrega campos opcionales con ejemplos de qué escribir, ayuda sobre lo pendiente y revisión antes de actualizar. Guardar prepara un borrador; Actualizar publica. La proyección pública de Supabase permite exclusivamente estos datos descriptivos acotados y conserva privadas las cantidades exactas de stock.
 
