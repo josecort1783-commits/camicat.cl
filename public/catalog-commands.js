@@ -56,8 +56,9 @@
   const editable=target instanceof Element&&!!target.closest('input,textarea,select,[contenteditable]:not([contenteditable="false"])');
   if(editable||document.querySelector('dialog[open]'))return;
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();open();}
-  else if(!e.ctrlKey&&!e.metaKey&&e.key==='/'){e.preventDefault();go('#coleccion',search);}
+  else if(!e.ctrlKey&&!e.metaKey&&(e.key==='/'||e.code==='Slash')){e.preventDefault();go('#coleccion',search);}
  });
+ let lastTagSignature=null;
  function updateTags(){
   if(!tags)return;
   const active=document.querySelector('.chips [data-filter][aria-pressed="true"]');
@@ -68,6 +69,9 @@
   if(available?.checked)items.push({text:'Solo disponibles',clear:()=>available.click()});
   const budget=document.getElementById('budgetReset');
   if(budget&&!budget.disabled)items.push({text:document.getElementById('budgetLabel').textContent,clear:()=>budget.click()});
+  const signature=JSON.stringify(items.map(item=>item.text));
+  if(signature===lastTagSignature)return;
+  lastTagSignature=signature;
   tags.replaceChildren();tags.hidden=!items.length;
   for(const item of items){
    const b=document.createElement('button');b.type='button';b.textContent=item.text+' ×';b.setAttribute('aria-label','Quitar filtro: '+item.text);
