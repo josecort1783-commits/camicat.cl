@@ -76,5 +76,6 @@
         }
       ]
     }
-  ]
+  ],
+  "buildCommand": "node scripts/build-storefront-styles.mjs"
 }
