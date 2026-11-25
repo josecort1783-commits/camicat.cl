@@ -1,0 +1,73 @@
+/* The real wire flowers are Camicat's signature. Sage, cream and full ink. */
+:root{--brand-paper:#f4f1e8;--brand-field:#dfe7d5;--brand-ink:#293f30;--brand-action:#36533e}
+:root[data-jewel-scene=christmas]{--brand-paper:#f3e5dd;--brand-field:#e7cec5;--brand-ink:#3d1c29;--brand-action:#4b1e2c}
+body.brand-atelier{font-family:Arial,sans-serif;color:var(--brand-ink)}
+body.brand-atelier .ambient-canvas,body.brand-atelier .cinema-reading{display:none}
+:root[data-jewel-scene] body.brand-atelier main>.atelier-hero{width:min(1120px,calc(100% - 48px));display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(32px,5vw,72px);align-items:center;background:var(--brand-paper);color:var(--brand-ink);padding:40px;min-height:0;overflow:visible;isolation:auto;margin:20px auto 48px;border-radius:0;box-shadow:none;animation:none}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .atelier-intro{color:var(--brand-ink);padding:0;min-width:0;background:none}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero h1{font:400 clamp(44px,4.4vw,64px)/1.06 Georgia,serif;letter-spacing:-.04em;max-width:15ch;color:var(--brand-ink)!important;margin:0 0 26px;text-shadow:none}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .atelier-lead{color:var(--brand-ink);font-size:18px;line-height:1.65;max-width:36ch}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .atelier-makers{color:var(--brand-ink);font-size:15px;line-height:1.6;margin:22px 0}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .atelier-hero-actions{gap:12px 24px;display:flex;flex-wrap:wrap}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .atelier-hero-actions>.button{order:-1;background:var(--brand-action);color:#fff8ef;min-height:48px;border-radius:3px;border:0;box-shadow:none}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .atelier-hero-actions>.text-link{color:var(--brand-ink);font-size:15px}
+body.brand-atelier .atelier-hero #surprise,body.brand-atelier .atelier-hero .atelier-3d-link{display:none}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .folio{position:sticky;top:120px;align-self:center;background:var(--brand-field);margin:0;max-width:none;width:100%;border-radius:0;box-shadow:none;overflow:hidden;transform:none}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .folio-header h2{font:400 26px/1.15 Georgia,serif;color:var(--brand-ink)}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .folio-spread{display:block}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .folio-study{display:none}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-portrait{height:clamp(300px,31vw,440px);border-radius:0;transform:none!important}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-portrait img{object-fit:contain;background:var(--brand-field)}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-tabs{display:flex;gap:8px;padding:0 22px 16px;flex-wrap:wrap}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-tabs button{flex-direction:row;font-size:14px;min-height:44px;padding:9px 12px;background:var(--brand-paper);color:var(--brand-ink);border-radius:3px}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-tabs button img{display:none}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-tabs button[aria-selected=true]{background:var(--brand-action);color:#fff8ef}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .folio-caption{grid-template-columns:1fr;padding:18px 22px;gap:6px}
+body.brand-atelier .atelier-photo-tools{padding:12px 22px 0}
+body.brand-atelier .atelier-wire-detail{display:none}
+body.brand-atelier :is(.detail-copy,.custom-main){color:var(--brand-ink)}
+body.brand-atelier .detail-facts{display:block;background:var(--brand-field);padding:16px 20px;margin:22px 0}
+body.brand-atelier .detail-facts>div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;margin:10px 0;border:0;padding:0}
+body.brand-atelier .detail-facts :is(dt,dd){font-size:15px;line-height:1.6;overflow-wrap:anywhere;margin:0}
+body.brand-atelier .detail-facts dt{font-weight:600}
+body.brand-atelier .detail-care summary{font:600 15px/1.5 Arial,sans-serif;cursor:pointer;min-height:44px;padding:12px 0}
+body.brand-atelier .detail-care p,body.brand-atelier .detail-delivery p{font-size:15px;line-height:1.6}
+body.brand-atelier .detail-question{display:block;min-height:44px;padding:12px 0;font-size:16px;text-underline-offset:4px;overflow-wrap:anywhere}
+body.brand-atelier .detail-reference-note{font-size:14px;line-height:1.6;margin:12px 0 20px}
+:root[data-jewel-scene] body.brand-atelier #nuestra-historia.maker-story{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(28px,5vw,72px);align-items:start;padding:40px;background:var(--brand-paper);border:0;border-radius:0;box-shadow:none}
+body.brand-atelier .maker-photo{margin:0;position:sticky;top:120px}
+body.brand-atelier .maker-photo img{width:100%;height:460px;object-fit:cover;object-position:center;display:block;border-radius:0}
+body.brand-atelier .maker-photo figcaption{font-size:14px;line-height:1.6;margin:12px 0;color:var(--brand-ink)}
+body.brand-atelier .maker-story-copy h2{font:400 clamp(32px,3.3vw,44px)/1.12 Georgia,serif;letter-spacing:-.03em;margin:0 0 24px;color:var(--brand-ink)}
+body.brand-atelier .maker-story-copy .maker-statement{font:400 24px/1.35 Georgia,serif;letter-spacing:-.015em;margin-bottom:22px}
+body.brand-atelier .maker-story-copy p,body.brand-atelier .maker-roles{font:16px/1.7 Arial,sans-serif;color:var(--brand-ink)}
+body.brand-atelier .maker-roles{margin:24px 0;padding:22px;background:var(--brand-field)}
+body.brand-atelier .maker-roles>div+div{margin-top:22px}
+body.brand-atelier .maker-roles dt{font-weight:600;margin-bottom:7px}
+body.brand-atelier .maker-roles dd{margin:0}
+body.brand-atelier .maker-links{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+body.brand-atelier .maker-links a{font-size:15px;line-height:1.5;min-height:44px;padding:10px 0;text-underline-offset:4px}
+body.brand-atelier :is(.maker-story,.atelier-hero):before,body.brand-atelier :is(.maker-story,.atelier-hero):after{display:none}
+body.brand-atelier :is(.button,.quick-add,.detail-question,.maker-links a):focus-visible{outline:3px solid currentColor;outline-offset:4px}
+body.brand-atelier #personaliza .custom-review-actions{align-items:stretch}
+body.brand-atelier #personaliza .custom-review-actions>a{min-height:48px}
+@media(max-width:760px){
+ :root[data-jewel-scene] body.brand-atelier main>.atelier-hero{width:calc(100% - 32px);grid-template-columns:minmax(0,1fr);padding:26px 18px 18px;gap:26px;margin:12px auto 32px}
+ :root[data-jewel-scene] body.brand-atelier .atelier-hero h1{font-size:clamp(34px,9.4vw,52px);max-width:none;margin-bottom:20px}
+ :root[data-jewel-scene] body.brand-atelier .atelier-hero .atelier-lead{font-size:16px;line-height:1.65}
+ :root[data-jewel-scene] body.brand-atelier .atelier-hero .atelier-makers{font-size:14px;line-height:1.6;margin:18px 0}
+ :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio{position:relative;top:auto}
+ :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-portrait{height:clamp(250px,77vw,410px)}
+ :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-tabs{padding:0 16px 14px;gap:6px}
+ :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-tabs button{padding:9px 10px;font-size:13px}
+ :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio-caption{padding:16px}
+ body.brand-atelier .atelier-photo-tools{padding:12px 16px 0;align-items:start}
+ body.brand-atelier .detail-facts{padding:12px 14px}
+ body.brand-atelier .detail-facts>div{grid-template-columns:95px minmax(0,1fr);gap:10px}
+ :root[data-jewel-scene] body.brand-atelier #nuestra-historia.maker-story{grid-template-columns:minmax(0,1fr);gap:24px;padding:24px 18px}
+ body.brand-atelier .maker-photo{position:static}
+ body.brand-atelier .maker-photo img{height:310px;object-position:center}
+ body.brand-atelier .maker-story-copy .maker-statement{font-size:23px}
+ body.brand-atelier .maker-roles{padding:18px}
+}
+@media(prefers-reduced-motion:reduce){body.brand-atelier :is(.atelier-hero,.folio,.maker-story){animation:none!important;transition:none!important}}

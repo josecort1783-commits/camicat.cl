@@ -4,7 +4,9 @@ export const isFeatured=p=>p?.featured??featureDefaults.has(p?.id);
 export const showsInFeatures=p=>p.visible&&p.available&&p.stock!==0;
 export const categories=['Aros','Collares','Pulseras','Otros'];
 export function safeImage(value){return typeof value==='string'&&(/^assets\/joya-\d+\.webp$/.test(value)||/^https:\/\/wbqpcunyzvdvhaiduyem\.supabase\.co\/storage\/v1\/object\/public\/camicat-products\/[a-z0-9/-]+\.webp$/.test(value)||/^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(value));}
-export function validProduct(p){return p&&/^[a-z][a-z0-9-]{0,99}$/.test(p.id)&&typeof p.name==='string'&&p.name.trim().length>=2&&p.name.length<=90&&Number.isInteger(p.price)&&p.price>=0&&p.price<=99999999&&categories.includes(p.category)&&typeof p.description==='string'&&p.description.length<=600&&safeImage(p.image)&&typeof p.available==='boolean'&&typeof p.visible==='boolean'&&(p.featured===undefined||typeof p.featured==='boolean')&&(p.stock===null||Number.isInteger(p.stock)&&p.stock>=0&&p.stock<=99999);}
+export const productFactLimits={material:180,dimensions:120,variants:180,care:300,delivery:180};
+export function validProductFacts(p){return Object.entries(productFactLimits).every(([key,max])=>p[key]===undefined||typeof p[key]==='string'&&p[key].length<=max);}
+export function validProduct(p){return p&&validProductFacts(p)&&/^[a-z][a-z0-9-]{0,99}$/.test(p.id)&&typeof p.name==='string'&&p.name.trim().length>=2&&p.name.length<=90&&Number.isInteger(p.price)&&p.price>=0&&p.price<=99999999&&categories.includes(p.category)&&typeof p.description==='string'&&p.description.length<=600&&safeImage(p.image)&&typeof p.available==='boolean'&&typeof p.visible==='boolean'&&(p.featured===undefined||typeof p.featured==='boolean')&&(p.stock===null||Number.isInteger(p.stock)&&p.stock>=0&&p.stock<=99999);}
 export function validCatalog(items){return Array.isArray(items)&&items.length<=300&&items.every(validProduct)&&new Set(items.map(p=>p.id)).size===items.length;}
 export function normalizeSeed(items){return items.map(p=>({...p,stock:null,visible:true}));}
 export function sameProduct(a,b){

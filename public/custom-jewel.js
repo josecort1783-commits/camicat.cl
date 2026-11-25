@@ -84,7 +84,7 @@
     event.preventDefault();
     if (!form.reportValidity() || !pieces.has(piece())) return;
     const note = idea.value.trim().replace(/\s+/gu, ' ').slice(0, 400);
-    const rows = [['Pieza', pieces.get(piece())], ['Tono del alambre', optionText(tone)], ['Piedra', optionText(stone)]];
+    const rows = [['Pieza', pieces.get(piece())], ['Tono del alambre', optionText(tone)], ['Piedra o color de referencia', optionText(stone)]];
     const size = measure.disabled ? '' : measure.value.trim().replace(/\s+/gu, ' ').slice(0, 55);
     if (size) rows.push([measurements[piece()][0], size]);
     if (note) rows.push(['Mi idea', note]);

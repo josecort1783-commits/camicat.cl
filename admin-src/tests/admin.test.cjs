@@ -252,3 +252,16 @@ test('recovery API rejects unlisted emails before contacting Supabase',async()=>
  assert.match($('#staffResetStatus').textContent,/correo no está autorizado/);
  b.dom.window.close();
 });
+
+test('los datos de la pieza se guardan, se revisan y se pueden dejar pendientes sin inventarlos',async()=>{
+ const b=await setup(),{$,w}=b;try{
+  $('[data-edit="flor-dorada"].edit-button').click();
+  $('#productMaterial').value='Material confirmado para la prueba';$('#productDimensions').value='Largo: 3 cm';$('#productCare').value='Indicaciones verificadas de prueba';$('#productVariants').value='Tono de prueba';$('#productDelivery').value='Retiro por coordinar';
+  $('#productForm').dispatchEvent(new w.Event('submit',{cancelable:true}));
+  $('#publish').click();assert.match($('#reviewList').textContent,/Materiales: Material confirmado/);assert.match($('#reviewList').textContent,/Cuidados: Indicaciones/);$('#confirmPublish').click();
+  $('[data-edit="flor-dorada"].edit-button').click();assert.equal($('#productMaterial').value,'Material confirmado para la prueba');assert.equal($('#productDimensions').value,'Largo: 3 cm');assert.equal($('#productCare').value,'Indicaciones verificadas de prueba');
+  $('#productMaterial').value='';$('#productForm').dispatchEvent(new w.Event('submit',{cancelable:true}));
+  const draft=JSON.parse(w.localStorage.getItem('camicat-admin-v1-draft'));assert.equal(draft.find(p=>p.id==='flor-dorada').material,undefined);
+  const m=await import('../src/model.js');assert.equal(m.validProduct({...draft[0],care:'x'.repeat(301)}),false);assert.equal(m.validProduct({...draft[0],material:4}),false);
+ }finally{b.dom.window.close()}
+});

@@ -1,3 +1,7 @@
 node_modules/
 .env*
 .vercel/
+
+# Local inspection and shared test dependencies
+.taste-skill/
+admin-src/node_modules

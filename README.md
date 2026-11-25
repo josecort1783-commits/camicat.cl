@@ -46,3 +46,7 @@ Los destinatarios autorizados y el permiso de auditoría se guardan en `camicat_
 Los tres modelos son estudios de referencia del archivo `jewel-models.mjs`, no reproducciones de inventario. Se conservan las fotos originales del catálogo y el aviso visible sobre ese alcance. No se añadieron imágenes generadas. Para reproducciones fieles hace falta preparar modelos o capturas de los productos reales.
 
 QA: vista en móvil de 320 y 390 px, tablet de 768 px y escritorio; botones táctiles de al menos 44 px. La revisión del navegador disponible usó el renderizador de respaldo Canvas con geometría 3D, porque WebGL está deshabilitado en ese entorno. La ruta WebGL y las pruebas en hardware iPhone real deben comprobarse adicionalmente. La prueba del estudio valida carga diferida, escena única, selección, acabados y pausa al salir de pantalla.
+
+### Marca y fichas de las piezas
+
+Ver [revisión de marca y medición](docs/marca-conversion-camicat.md). El editor permite materiales, medidas, opciones, cuidados y entrega, todos opcionales y sin valores inventados. La migración `20261125043005_camicat_public_product_facts.sql` publica únicamente estos campos acotados, conserva los productos ocultos fuera de la tienda y mantiene privadas las cantidades exactas de stock. Los datos vacíos se consultan al taller.

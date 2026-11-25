@@ -97,15 +97,19 @@ $('#search').addEventListener('input',e=>{search=e.target.value.toLocaleLowerCas
 // Optional facts and photos stay separate from the seed price and stock preview.
 function productFacts(p){
  const seed=defaults.find(item=>item.id===p.id&&item.image===p.image);
- const fact=key=>[p[key],seed?.[key]].find(value=>typeof value==='string'&&value.trim()&&value.length<=180)?.trim()||'Por confirmar';
+ const limits={material:180,dimensions:120,variants:180,care:300,delivery:180};
+ const fact=key=>typeof p[key]==='string'&&p[key].trim()&&p[key].length<=limits[key]?p[key].trim():'';
  const wornImage=[p.wornImage,seed?.wornImage].find(url=>url!==p.image&&safeImage(url));
- return {material:fact('material'),dimensions:fact('dimensions'),wornImage};
+ return {material:fact('material'),dimensions:fact('dimensions'),variants:fact('variants'),care:fact('care'),delivery:fact('delivery'),wornImage};
 }
 function showProduct(id){
  const p=products.find(item=>item.id===id);
  if(!p)return;
  const available=quantityLimit(p)>0, facts=productFacts(p), name=escapeHtml(p.name);
- const stock=!available?'Agotado':Number.isInteger(p.stock)?'Disponible según catálogo':'Stock por confirmar';
+ const stock=!available?'Agotado':Number.isInteger(p.stock)?'Disponible para consultar':'Disponibilidad por confirmar';
+ const missing=[!facts.material&&'materiales',!facts.dimensions&&'medidas',!facts.care&&'cuidados'].filter(Boolean);
+ const contact=new URL(document.getElementById('camicatContactWhatsApp').href);
+ contact.searchParams.set('text',`Hola, CamiCat. Me interesa ${p.name} (referencia ${p.id}). ¿Me confirman ${missing.length?missing.join(', ')+', ':''}disponibilidad, precio y entrega? Gracias.`);
  $('#productDetail').innerHTML=`<div class="product-detail-layout">
  <div class="detail-media">
  <button type="button" class="detail-photo" data-full-photo="${escapeHtml(p.id)}" aria-label="Ver fotografía completa de ${name}">
@@ -118,12 +122,12 @@ function showProduct(id){
  <p class="detail-price">${money(p.price)} <small>Precio referencial</small></p>
  <p class="detail-description">${escapeHtml(p.description)}</p>
  <dl class="detail-facts">
- <div><dt>Material</dt><dd>${escapeHtml(facts.material)}</dd></div>
- <div><dt>Medidas</dt><dd>${escapeHtml(facts.dimensions)}</dd></div>
- <div><dt>Disponibilidad</dt><dd>${stock}</dd></div>
+ <div><dt>Material</dt><dd>${escapeHtml(facts.material||"Consulta al taller")}</dd></div>
+ <div><dt>Medidas</dt><dd>${escapeHtml(facts.dimensions||"Consulta al taller")}</dd></div>
+ <div><dt>Opciones del diseño</dt><dd>${escapeHtml(facts.variants||"La foto muestra una referencia. Consulta otros tonos o combinaciones.")}</dd></div><div><dt>Disponibilidad</dt><dd>${stock}</dd></div>
  </dl>
- <div class="detail-delivery"><p><strong>Retiro en Requínoa</strong> · Lugar y horario por coordinar.</p><p><strong>Envíos a todo Chile</strong> · El despacho se cotiza aparte antes de pagar.</p></div>
- <button type="button" class="button full" id="detailAdd" ${available?'':'disabled'}>${available?'Agregar a mi selección':'Agotado'}</button>
+ <details class="detail-care"><summary>Cuidados de esta pieza</summary><p>${escapeHtml(facts.care||"Pide al taller las indicaciones según los materiales de esta pieza antes de usar limpiadores o productos para metales.")}</p></details><div class="detail-delivery"><p><strong>Retiro en Requínoa</strong> · Lugar y horario por coordinar.</p><p><strong>Envíos a todo Chile</strong> · El despacho se cotiza aparte antes de pagar.</p>${facts.delivery?`<p>${escapeHtml(facts.delivery)}</p>`:""}</div>
+ <a class="detail-question" id="detailContact" href="${escapeHtml(contact.href)}" target="_blank" rel="noopener">Consultar esta pieza por WhatsApp</a><p class="detail-reference-note">${missing.length?"El taller confirma los datos pendientes antes de que decidas.":"Puedes consultar cualquier detalle antes de elegir."} Agregar a la selección no cobra ni reserva unidades.</p><button type="button" class="button full" id="detailAdd" ${available?'':'disabled'}>${available?'Agregar a mi selección':'Agotado'}</button>
  </div></div>`;
  $('#detailAdd').onclick=()=>{if(!add(id))return;$('#productDialog').close();openDialog('#cartDialog');};
  openDialog('#productDialog');
