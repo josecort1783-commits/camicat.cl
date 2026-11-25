@@ -2601,7 +2601,7 @@ body.brand-atelier .atelier-hero #surprise,body.brand-atelier .atelier-hero .ate
 :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio-spread{display:block}
 :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio-study{display:none}
 :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-portrait{height:clamp(300px,31vw,440px);border-radius:0;transform:none!important}
-:root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-portrait img{object-fit:contain;background:var(--brand-field)}
+:root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-portrait img{object-fit:cover;object-position:50% 60%;background:var(--brand-field)}
 :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-tabs{display:flex;gap:8px;padding:0 22px 16px;flex-wrap:wrap}
 :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-tabs button{flex-direction:row;font-size:14px;min-height:44px;padding:9px 12px;background:var(--brand-paper);color:var(--brand-ink);border-radius:3px}
 :root[data-jewel-scene] body.brand-atelier .atelier-hero .folio .atelier-tabs button img{display:none}
@@ -2655,4 +2655,11 @@ body.brand-atelier #personaliza .custom-review-actions>a{min-height:48px}
  body.brand-atelier .maker-roles{padding:18px}
 }
 @media(prefers-reduced-motion:reduce){body.brand-atelier :is(.atelier-hero,.folio,.maker-story){animation:none!important;transition:none!important}}
+
+body.brand-atelier .atelier-hero .atelier-hero-actions a[href="#estudio-3d"]{display:none}
+body.brand-atelier .appearance-settings{width:100%;max-width:760px;margin-top:22px;color:var(--brand-ink);text-align:left}
+body.brand-atelier .appearance-settings>summary{display:list-item;cursor:pointer;font:600 14px/1.5 Arial,sans-serif;min-height:44px;padding:12px 0}
+body.brand-atelier .appearance-settings .appearance-bar{width:100%;max-width:none;margin:0;padding:12px 0;background:transparent;display:block;min-height:0}
+body.brand-atelier .appearance-settings .jewel-light-tools{justify-content:flex-start;flex-wrap:wrap;gap:12px}
+body.brand-atelier .appearance-settings button{font-size:14px;min-height:44px}
 
